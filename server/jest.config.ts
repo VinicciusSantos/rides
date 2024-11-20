@@ -1,0 +1,31 @@
+export default {
+  preset: 'ts-jest',
+  testEnvironment: 'node',
+  collectCoverageFrom: ['**/*.ts'],
+  testPathIgnorePatterns: ['node_modules', 'dist'],
+  coverageDirectory: './coverage',
+  coveragePathIgnorePatterns: [
+    'shared',
+    'migrations',
+    '.d.ts',
+    '.module.ts',
+    '.providers.ts',
+    '-fixture.ts',
+    'jest.config.ts',
+    'migrate.ts',
+    'validator-rules.ts',
+    'index.ts',
+    'global-config.ts',
+    'constants.ts',
+    'main.ts',
+  ],
+  setupFilesAfterEnv: ['./src/shared/infra/testing/expect-helpers.ts'],
+  coverageThreshold: {
+    global: {
+      statements: 80,
+      branches: 80,
+      functions: 80,
+      lines: 80,
+    },
+  },
+};
