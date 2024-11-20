@@ -18,6 +18,16 @@ export class OpBuilder {
   }
 
   /**
+   * Like is a helper function to build an where condition to search for segments of a value
+   * @param key is the column name
+   * @param value is the value to search
+   * @returns the like condition
+   */
+  public static Like(key: string, value?: string) {
+    return value ? { [key]: { [Op.like]: `%${value}%` } } : {};
+  }
+
+  /**
    * MultipleExact is a helper function to build an where condition to search for exact values in a array of values
    * @param key is the column name
    * @param values is the array of values to search

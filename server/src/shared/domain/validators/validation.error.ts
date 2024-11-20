@@ -31,7 +31,7 @@ export class SearchValidationError extends BaseValidationError {
 
 export class LoadEntityError extends BaseValidationError {
   constructor(public error: FieldsErrors[]) {
-    super(error, 'LoadEntityError');
+    super(error, 'LoadEntityError:' + error.join(', '));
     this.name = 'LoadEntityError';
   }
 }
