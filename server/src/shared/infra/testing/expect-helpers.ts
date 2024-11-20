@@ -1,6 +1,10 @@
 import { isString } from 'lodash';
+
 import { Notification } from '../../domain/validators';
 import { ValueObject } from '../../domain/value-objects';
+import { Config } from '../config';
+
+Config.readEnv();
 
 /***
  * toBeValueObject is a custom Jest matcher that checks if two value objects are equal.

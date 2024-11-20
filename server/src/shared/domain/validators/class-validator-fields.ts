@@ -1,21 +1,18 @@
-import { validateSync } from 'class-validator';
-import { IValidatorFields } from './validator-fields-interface';
+import { ZodObject } from 'zod';
+
 import { Notification } from './notification';
 
-export abstract class ClassValidatorFields implements IValidatorFields {
-  public validate(
-    notification: Notification,
-    data: object,
-    fields: string[],
-  ): boolean {
-    const errors = validateSync(data, { groups: fields });
-    if (errors.length) {
-      for (const error of errors) {
-        Object.values(error.constraints!).forEach((message: string) => {
-          notification.addError(message, error.property);
-        });
+export abstract class ClassValidatorFields {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  protected abstract schema: ZodObject<any>;
+
+  public validate(data: { notification: Notification }): boolean {
+    const result = this.schema.safeParse(data);
+    if (!result.success) {
+      for (const error of result.error.errors) {
+        data.notification.addError(error.message);
       }
     }
-    return !errors.length;
+    return result.success;
   }
 }

@@ -16,7 +16,14 @@ export function setupSequelize(options: SequelizeOptions = {}) {
   });
 
   beforeEach(async () => {
-    await _sequelize.sync({ force: true });
+    try {
+      await _sequelize.sync({ force: true });
+    } catch (error) {
+      // Disable foreign key checks to truncate tables
+      await _sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
+      await _sequelize.sync({ force: true });
+      await _sequelize.query('SET FOREIGN_KEY_CHECKS = 1');
+    }
   });
 
   afterAll(async () => await _sequelize.close());

@@ -1,3 +1,5 @@
+import 'dotenv/config';
+
 import { IConfig } from '../../domain/config';
 import { clearObject } from '../utils';
 import { ConfigValidator } from './validators/config.validator';

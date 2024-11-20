@@ -8,6 +8,16 @@ import { SequelizeDb } from './sequelize';
  */
 export class OpBuilder {
   /**
+   * Exact is a helper function to build an where condition to search for exact values
+   * @param key is the column name
+   * @param value is the value to search
+   * @returns the condition
+   */
+  public static Exact(key: string, value?: unknown) {
+    return value ? { [key]: value } : {};
+  }
+
+  /**
    * MultipleExact is a helper function to build an where condition to search for exact values in a array of values
    * @param key is the column name
    * @param values is the array of values to search
