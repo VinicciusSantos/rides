@@ -4,7 +4,7 @@ import { MigrationFn } from 'umzug';
 export const up: MigrationFn<Sequelize> = async ({ context: sequelize }) => {
   await sequelize.getQueryInterface().createTable('t_customer', {
     customer_id: {
-      type: DataTypes.NUMBER,
+      type: DataTypes.UUID,
       allowNull: false,
       primaryKey: true,
     },

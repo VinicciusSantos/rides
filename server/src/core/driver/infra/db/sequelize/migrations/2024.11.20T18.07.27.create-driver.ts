@@ -4,9 +4,10 @@ import { MigrationFn } from 'umzug';
 export const up: MigrationFn<Sequelize> = async ({ context: sequelize }) => {
   await sequelize.getQueryInterface().createTable('t_driver', {
     driver_id: {
-      type: DataTypes.NUMBER,
+      type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
+      autoIncrement: true,
     },
     name: {
       type: DataTypes.STRING(255),
@@ -21,15 +22,15 @@ export const up: MigrationFn<Sequelize> = async ({ context: sequelize }) => {
       allowNull: false,
     },
     rating: {
-      type: DataTypes.NUMBER,
+      type: DataTypes.DECIMAL,
       allowNull: false,
     },
     fee_by_km: {
-      type: DataTypes.NUMBER,
+      type: DataTypes.DECIMAL,
       allowNull: false,
     },
     minimum_km: {
-      type: DataTypes.NUMBER,
+      type: DataTypes.DECIMAL,
       allowNull: false,
     },
   });
