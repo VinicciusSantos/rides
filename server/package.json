@@ -1,5 +1,5 @@
 {
-  "name": "shopper-server",
+  "name": "rides-server",
   "version": "0.0.1",
   "main": "src/main.ts",
   "scripts": {

@@ -1,0 +1,32 @@
+services:
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: rides-server
+    ports:
+      - '8000:8000'
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:17
+    container_name: rides-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: rides_db_user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: rides_db
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U rides_db_user -d rides_db']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    ports:
+      - '5432:5432'
