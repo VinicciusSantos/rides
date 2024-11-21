@@ -41,21 +41,35 @@ export class GoogleMapsService implements IMapsService {
       headers: {
         'Content-Type': HttpContentTypes.JSON,
         'X-Goog-Api-Key': Config.env.google_api_key,
-        'X-Goog-FieldMask': 'routes.duration,routes.distanceMeters',
+        'X-Goog-FieldMask':
+          'routes.duration,routes.distanceMeters,routes.polyline.encodedPolyline',
       },
       data: {
-        origin: { location: { latLng: origin.toJSON() } },
-        destination: { location: { latLng: destination.toJSON() } },
+        origin: {
+          location: {
+            latLng: {
+              latitude: origin.latitude,
+              longitude: origin.longitude,
+            },
+          },
+        },
+        destination: {
+          location: {
+            latLng: {
+              latitude: destination.latitude,
+              longitude: destination.longitude,
+            },
+          },
+        },
         travelMode: TravelMode.DRIVE,
         computeAlternativeRoutes: false,
       } as DirectionsRequest,
     });
 
-    const [route] = response.routes;
-    if (!route) {
+    if (!response.routes || !response.routes.length) {
       throw new Error('No route found');
     }
 
-    return route;
+    return response.routes[0];
   }
 }

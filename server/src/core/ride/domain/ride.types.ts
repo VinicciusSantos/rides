@@ -1,43 +1,41 @@
 import { EntityJSON } from '../../../shared/domain';
-import { Uuid } from '../../../shared/domain/value-objects';
+import { Geolocation, Uuid } from '../../../shared/domain/value-objects';
 import { CustomerId } from '../../customer/domain';
 import { DriverId } from '../../driver/domain';
 
 export class RideId extends Uuid {}
 
-export enum RideStatus {
-  CONFIRMED = 'CONFIRMED',
-  PENDING = 'PENDING',
-}
-
 export interface RideConstructorProps {
   ride_id: RideId;
   customer_id: CustomerId;
-  origin: string;
-  destination: string;
+  driver_id: DriverId;
+  origin: Geolocation;
+  destination: Geolocation;
   distance: number;
   duration: string;
-  driver_id?: DriverId;
-  value?: number;
-  status: RideStatus;
+  value: number;
+  encoded_polyline: string;
 }
 
 export interface RideCreateCommand {
   customer_id: CustomerId;
-  origin: string;
-  destination: string;
+  driver_id: DriverId;
+  origin: Geolocation;
+  destination: Geolocation;
   distance: number;
   duration: string;
+  value: number;
+  encoded_polyline: string;
 }
 
 export type RideJSON = EntityJSON<{
   ride_id: string;
   customer_id: string;
-  origin: string;
-  destination: string;
+  origin: Geolocation;
+  destination: Geolocation;
   distance: number;
   duration: string;
-  driver_id: number | null;
-  value: number | null;
-  status: RideStatus;
+  driver_id: number;
+  value: number;
+  encoded_polyline: string;
 }>;

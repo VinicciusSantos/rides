@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 import { ClassValidatorFields } from '../../../shared/domain/validators';
 
-const carSchema = z.object({
+const vehicleSchema = z.object({
   model: z
     .string({ message: 'Car model is required' })
     .min(1, { message: 'Car model must be at least 1 character' })
@@ -18,13 +18,9 @@ const carSchema = z.object({
     .max(new Date().getFullYear() + 1, {
       message: 'Car year must be at most the current year',
     }),
-  color: z
-    .string({ message: 'Car color is required' })
-    .min(1, { message: 'Car color must be at least 1 character' })
-    .max(255, { message: 'Car color must be at most 255 characters' }),
-  observations: z
+  description: z
     .string()
-    .max(255, { message: 'Car observations must be at most 255 characters' })
+    .max(255, { message: 'Car description must be at most 255 characters' })
     .nullable()
     .optional(),
 });
@@ -41,7 +37,7 @@ export class DriverValidator extends ClassValidatorFields {
       .max(255, {
         message: 'Driver description must be at most 255 characters',
       }),
-    car: carSchema,
+    vehicle: vehicleSchema,
     rating: z
       .number({ message: 'Driver rating should be a number' })
       .gte(0, { message: 'Driver rating should be a positive number' })

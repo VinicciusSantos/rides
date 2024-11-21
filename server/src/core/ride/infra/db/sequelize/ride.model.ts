@@ -6,18 +6,21 @@ import {
   Table,
 } from 'sequelize-typescript';
 
-import { RideStatus } from '../../../domain';
+import {
+  Geolocation,
+  GeolocationJSON,
+} from '../../../../../shared/domain/value-objects';
 
 export interface RideModelProps {
   ride_id: string;
   customer_id: string;
-  origin: string;
-  destination: string;
+  origin: Geolocation;
+  destination: Geolocation;
   distance: number;
   duration: string;
-  driver_id: number | null;
-  value: number | null;
-  status: RideStatus;
+  driver_id: number;
+  value: number;
+  encoded_polyline: string;
 }
 
 @Table({ tableName: 't_ride', timestamps: false })
@@ -30,11 +33,11 @@ export class RideModel extends Model<RideModelProps> {
   @Column({ type: DataType.UUID })
   public declare customer_id: string;
 
-  @Column({ type: DataType.STRING })
-  public declare origin: string;
+  @Column({ type: DataType.JSON })
+  public declare origin: Geolocation;
 
-  @Column({ type: DataType.STRING })
-  public declare destination: string;
+  @Column({ type: DataType.JSON })
+  public declare destination: Geolocation;
 
   @Column({ type: DataType.FLOAT })
   public declare distance: number;
@@ -49,6 +52,39 @@ export class RideModel extends Model<RideModelProps> {
   @Column({ type: DataType.FLOAT })
   public declare value: number;
 
-  @Column({ type: DataType.ENUM, values: Object.values(RideStatus) })
-  public declare status: RideStatus;
+  @Column({ type: DataType.TEXT })
+  public declare encoded_polyline: string;
+}
+
+export interface RideEstimationModelProps {
+  origin: GeolocationJSON;
+  destination: GeolocationJSON;
+  distance: number;
+  duration: string;
+  encoded_polyline: string;
+  created_at: Date;
+}
+
+@Table({ tableName: 't_ride_estimation', timestamps: false })
+export class RideEstimationModel extends Model {
+  @Column({ type: DataType.INTEGER, autoIncrement: true, primaryKey: true })
+  public declare id: number;
+
+  @Column({ type: DataType.JSON })
+  public declare origin: string;
+
+  @Column({ type: DataType.JSON })
+  public declare destination: string;
+
+  @Column({ type: DataType.FLOAT })
+  public declare distance: number;
+
+  @Column({ type: DataType.STRING })
+  public declare duration: string;
+
+  @Column({ type: DataType.TEXT })
+  public declare encoded_polyline: string;
+
+  @Column({ type: DataType.DATE })
+  public declare created_at: Date;
 }

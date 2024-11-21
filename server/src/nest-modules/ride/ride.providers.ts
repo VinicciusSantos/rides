@@ -8,6 +8,7 @@ import {
 } from '../../core/ride/application/usecases';
 import { IRideRepository } from '../../core/ride/domain';
 import {
+  RideEstimationModel,
   RideModel,
   RideSequelizeRepository,
 } from '../../core/ride/infra/db/sequelize';
@@ -25,9 +26,16 @@ const REPOSITORIES = {
   },
   RIDE_SEQUELIZE_REPOSITORY: {
     provide: RideSequelizeRepository,
-    useFactory: (rideModel: typeof RideModel, uow: UnitOfWorkSequelize) =>
-      new RideSequelizeRepository(rideModel, uow),
-    inject: [getModelToken(RideModel), 'UnitOfWork'],
+    useFactory: (
+      rideModel: typeof RideModel,
+      rideEstimationModel: typeof RideEstimationModel,
+      uow: UnitOfWorkSequelize,
+    ) => new RideSequelizeRepository(rideModel, rideEstimationModel, uow),
+    inject: [
+      getModelToken(RideModel),
+      getModelToken(RideEstimationModel),
+      'UnitOfWork',
+    ],
   },
 };
 
@@ -35,14 +43,15 @@ const USE_CASES = {
   ESTIMATE_RIDE_USECASE: {
     provide: EstimateRideUsecase,
     useFactory: (
-      uow: IUnitOfWork,
-      maps: IMapsService,
+      rideRepo: IRideRepository,
       driverRepo: IDriverRepository,
-    ) => new EstimateRideUsecase(uow, maps, driverRepo),
+      maps: IMapsService,
+    ) => new EstimateRideUsecase(rideRepo, driverRepo, maps),
     inject: [
       'UnitOfWork',
       MAPS_SERVICE_PROVIDER.provide,
       DRIVER_PROVIDERS.REPOSITORIES.DRIVER_REPOSITORY.provide,
+      REPOSITORIES.RIDE_REPOSITORY.provide,
     ],
   },
   CONFIRM_RIDE_USECASE: {

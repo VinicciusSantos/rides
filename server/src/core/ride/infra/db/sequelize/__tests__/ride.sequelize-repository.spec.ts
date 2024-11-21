@@ -2,19 +2,21 @@ import { DuplicatedEntityError } from '../../../../../../shared/domain/errors';
 import { UnitOfWorkSequelize } from '../../../../../../shared/infra/db/sequelize';
 import { setupSequelize } from '../../../../../../shared/infra/testing';
 import { Ride, RideFilter, RideId, RideSearchParams } from '../../../../domain';
-import { RideModel } from '../ride.model';
+import { RideEstimationModel, RideModel } from '../ride.model';
 import { RideModelMapper } from '../ride.model-mapper';
 import { RideSequelizeRepository } from '../ride.sequelize-repository';
 
 describe('RideSequelizeRepository Unit Tests', () => {
-  const sequelizeHelper = setupSequelize({ models: [RideModel] });
+  const sequelizeHelper = setupSequelize({
+    models: [RideModel, RideEstimationModel],
+  });
 
   let uow: UnitOfWorkSequelize;
   let rideRepo: RideSequelizeRepository;
 
   beforeEach(() => {
     uow = new UnitOfWorkSequelize(sequelizeHelper.sequelize);
-    rideRepo = new RideSequelizeRepository(RideModel, uow);
+    rideRepo = new RideSequelizeRepository(RideModel, RideEstimationModel, uow);
   });
 
   describe('insert', () => {

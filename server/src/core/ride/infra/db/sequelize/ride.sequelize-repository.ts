@@ -6,13 +6,17 @@ import {
 import {
   IRideRepository,
   Ride,
+  RideEstimation,
   RideFilter,
   RideId,
   RideSearchParams,
   RideSearchResult,
 } from '../../../domain';
-import { RideModel, RideModelProps } from './ride.model';
-import { RideModelMapper } from './ride.model-mapper';
+import { RideEstimationModel, RideModel, RideModelProps } from './ride.model';
+import {
+  RideEstimationModelMapper,
+  RideModelMapper,
+} from './ride.model-mapper';
 
 export class RideSequelizeRepository implements IRideRepository {
   public sortableFields: (keyof RideModelProps)[] = [];
@@ -20,6 +24,7 @@ export class RideSequelizeRepository implements IRideRepository {
 
   constructor(
     private rideModel: typeof RideModel,
+    private rideEstimationModel: typeof RideEstimationModel,
     private uow: UnitOfWorkSequelize,
   ) {}
 
@@ -63,6 +68,35 @@ export class RideSequelizeRepository implements IRideRepository {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public async delete(_aggregate_id: RideId): Promise<void> {
     throw new Error('Method not implemented.');
+  }
+
+  public async registerEstimation(estimation: RideEstimation): Promise<void> {
+    await this.rideEstimationModel.create(
+      { ...RideEstimationModelMapper.toModelProps(estimation) },
+      {
+        include: RideSequelizeRepository.relations,
+        transaction: this.uow.getTransaction(),
+      },
+    );
+  }
+
+  public async removeEstimation(estimation_id: number): Promise<void> {
+    await this.rideEstimationModel.destroy({
+      where: { id: estimation_id },
+      transaction: this.uow.getTransaction(),
+    });
+  }
+
+  public async findEstimation(
+    origin: string,
+    destination: string,
+  ): Promise<RideEstimation | null> {
+    const data = await this.rideEstimationModel.findOne({
+      where: { origin, destination },
+      transaction: this.uow.getTransaction(),
+    });
+
+    return data ? RideEstimationModelMapper.toValueObject(data) : null;
   }
 
   private async _search(props: RideSearchParams) {

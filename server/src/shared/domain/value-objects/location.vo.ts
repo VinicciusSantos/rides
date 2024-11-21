@@ -3,6 +3,7 @@ import { ValueObject } from './value-object';
 export interface GeolocationJSON {
   latitude: number;
   longitude: number;
+  address: string | null;
 }
 
 export class Geolocation extends ValueObject {
@@ -18,6 +19,7 @@ export class Geolocation extends ValueObject {
     return {
       latitude: this.latitude,
       longitude: this.longitude,
+      address: this.address ?? null,
     };
   }
 }

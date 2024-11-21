@@ -17,7 +17,7 @@ export class CustomerSearchParams extends SearchParams<CustomerFilter> {
     return new CustomerSearchParams({
       ...props,
       page: props?.page ?? 1,
-      per_page: props?.per_page ?? 15,
+      per_page: props?.paginate ? (props?.per_page ?? 15) : Infinity,
       sort: props?.sort ?? 'name',
       sort_dir: props?.sort_dir ?? 'asc',
     });

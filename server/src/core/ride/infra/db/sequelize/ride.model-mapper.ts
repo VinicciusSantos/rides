@@ -1,8 +1,14 @@
 import { LoadEntityError } from '../../../../../shared/domain/validators';
+import { Geolocation } from '../../../../../shared/domain/value-objects';
 import { CustomerId } from '../../../../customer/domain';
 import { DriverId } from '../../../../driver/domain';
-import { Ride, RideId } from '../../../domain';
-import { RideModel, RideModelProps } from './ride.model';
+import { Ride, RideEstimation, RideId } from '../../../domain';
+import {
+  RideEstimationModel,
+  RideEstimationModelProps,
+  RideModel,
+  RideModelProps,
+} from './ride.model';
 
 export class RideModelMapper {
   public static toAggregate(model: RideModel): Ride {
@@ -11,9 +17,7 @@ export class RideModelMapper {
       ...rawData,
       ride_id: new RideId(rawData.ride_id),
       customer_id: new CustomerId(rawData.customer_id),
-      driver_id: rawData.driver_id
-        ? new DriverId(rawData.driver_id)
-        : undefined,
+      driver_id: new DriverId(rawData.driver_id),
       value: rawData.value ?? undefined,
     });
 
@@ -37,7 +41,39 @@ export class RideModelMapper {
       duration: rideInfos.duration,
       driver_id: rideInfos.driver_id,
       value: rideInfos.value,
-      status: rideInfos.status,
+      encoded_polyline: rideInfos.encoded_polyline,
+    };
+  }
+}
+
+export class RideEstimationModelMapper {
+  public static toValueObject(model: RideEstimationModel): RideEstimation {
+    const rawData = model.toJSON();
+    return new RideEstimation({
+      origin: new Geolocation(
+        rawData.origin.latitude,
+        rawData.origin.longitude,
+      ),
+      destination: new Geolocation(
+        rawData.destination.latitude,
+        rawData.destination.longitude,
+      ),
+      distance: rawData.distance,
+      duration: rawData.duration,
+      encoded_polyline: rawData.encoded_polyline,
+      created_at: rawData.created_at,
+    });
+  }
+
+  public static toModelProps(vo: RideEstimation): RideEstimationModelProps {
+    const estimationInfos = vo.toJSON();
+    return {
+      origin: estimationInfos.origin.toJSON(),
+      destination: estimationInfos.destination.toJSON(),
+      distance: estimationInfos.distance,
+      duration: estimationInfos.duration,
+      encoded_polyline: estimationInfos.encoded_polyline,
+      created_at: estimationInfos.created_at,
     };
   }
 }

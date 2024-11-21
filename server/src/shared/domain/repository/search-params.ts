@@ -10,6 +10,7 @@ export interface SearchParamsConstructorProps<Filter = string> {
   sort?: string | null;
   sort_dir?: SortDirection | null;
   filter?: Filter | null;
+  paginate?: boolean;
 }
 
 export class SearchParams<Filter = string> extends ValueObject {

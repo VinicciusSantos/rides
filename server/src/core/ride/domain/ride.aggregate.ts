@@ -1,4 +1,5 @@
 import { Entity } from '../../../shared/domain';
+import { Geolocation } from '../../../shared/domain/value-objects';
 import { CustomerId } from '../../customer/domain';
 import { DriverId } from '../../driver/domain';
 import { RideFakeBuilder } from './ride.fake-builder';
@@ -7,7 +8,6 @@ import {
   RideCreateCommand,
   RideId,
   RideJSON,
-  RideStatus,
 } from './ride.types';
 import { RideValidator } from './ride.validator';
 
@@ -17,13 +17,13 @@ export class Ride
 {
   private readonly _ride_id: RideId;
   private readonly _customer_id: CustomerId;
-  private readonly _origin: string;
-  private readonly _destination: string;
+  private readonly _origin: Geolocation;
+  private readonly _destination: Geolocation;
   private readonly _distance: number;
   private readonly _duration: string;
-  private _driver_id?: DriverId;
-  private _value?: number;
-  private _status: RideStatus;
+  private _driver_id: DriverId;
+  private _value: number;
+  private _encoded_polyline: string;
 
   public get entity_id(): RideId {
     return this._ride_id;
@@ -37,11 +37,11 @@ export class Ride
     return this._customer_id;
   }
 
-  public get origin(): string {
+  public get origin(): Geolocation {
     return this._origin;
   }
 
-  public get destination(): string {
+  public get destination(): Geolocation {
     return this._destination;
   }
 
@@ -53,16 +53,16 @@ export class Ride
     return this._duration;
   }
 
-  public get driver_id(): DriverId | undefined {
+  public get driver_id(): DriverId {
     return this._driver_id;
   }
 
-  public get value(): number | undefined {
+  public get value(): number {
     return this._value;
   }
 
-  public get status(): RideStatus {
-    return this._status;
+  public get encoded_polyline(): string {
+    return this._encoded_polyline;
   }
 
   public static get fake() {
@@ -73,7 +73,6 @@ export class Ride
     const ride = new Ride({
       ...props,
       ride_id: new RideId(),
-      status: RideStatus.PENDING,
     });
 
     ride.validate();
@@ -90,7 +89,7 @@ export class Ride
     this._duration = props.duration;
     this._driver_id = props.driver_id;
     this._value = props.value;
-    this._status = props.status;
+    this._encoded_polyline = props.encoded_polyline;
   }
 
   public validate(): boolean {
@@ -105,9 +104,9 @@ export class Ride
       destination: this.destination,
       distance: this.distance,
       duration: this.duration,
-      driver_id: this.driver_id?.id ?? null,
-      value: this.value ?? null,
-      status: this.status,
+      driver_id: this.driver_id.id,
+      value: this.value,
+      encoded_polyline: this.encoded_polyline,
     };
   }
 }

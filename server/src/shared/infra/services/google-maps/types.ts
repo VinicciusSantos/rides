@@ -109,7 +109,9 @@ interface Place {
 export interface DirectionsRoute {
   distanceMeters: number;
   duration: string;
-  polyline: unknown;
+  polyline: {
+    encodedPolyline: string;
+  };
 }
 
 export enum TravelMode {

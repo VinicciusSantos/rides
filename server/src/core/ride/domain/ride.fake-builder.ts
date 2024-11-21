@@ -1,3 +1,4 @@
+import { Geolocation } from '../../../shared/domain/value-objects';
 import {
   FakeBuilder,
   OptionalFakeFields,
@@ -6,7 +7,7 @@ import {
 import { CustomerId } from '../../customer/domain';
 import { DriverId } from '../../driver/domain';
 import { Ride } from './ride.aggregate';
-import { RideId, RideJSON, RideStatus } from './ride.types';
+import { RideId, RideJSON } from './ride.types';
 
 export class RideFakeBuilder<T, TJSON> extends FakeBuilder<
   Ride,
@@ -20,9 +21,19 @@ export class RideFakeBuilder<T, TJSON> extends FakeBuilder<
 
   private customer_id: PropOrFactory<CustomerId> = () => new CustomerId();
 
-  private origin: PropOrFactory<string> = () => this.chance.address();
+  private origin: PropOrFactory<Geolocation> = () =>
+    new Geolocation(
+      this.chance.latitude(),
+      this.chance.longitude(),
+      this.chance.address(),
+    );
 
-  private destination: PropOrFactory<string> = () => this.chance.address();
+  private destination: PropOrFactory<Geolocation> = () =>
+    new Geolocation(
+      this.chance.latitude(),
+      this.chance.longitude(),
+      this.chance.address(),
+    );
 
   private distance: PropOrFactory<number> = () => this.chance.natural();
 
@@ -32,7 +43,7 @@ export class RideFakeBuilder<T, TJSON> extends FakeBuilder<
 
   private value: PropOrFactory<number> = () => this.chance.floating();
 
-  private status: PropOrFactory<RideStatus> = RideStatus.PENDING;
+  private encoded_polyline: PropOrFactory<string> = () => this.chance.string();
 
   public static one() {
     return new RideFakeBuilder<Ride, RideJSON>();
@@ -56,12 +67,12 @@ export class RideFakeBuilder<T, TJSON> extends FakeBuilder<
     return this;
   }
 
-  public withOrigin(valueOrFactory: PropOrFactory<string>): this {
+  public withOrigin(valueOrFactory: PropOrFactory<Geolocation>): this {
     this.origin = valueOrFactory;
     return this;
   }
 
-  public withDestination(valueOrFactory: PropOrFactory<string>): this {
+  public withDestination(valueOrFactory: PropOrFactory<Geolocation>): this {
     this.destination = valueOrFactory;
     return this;
   }
@@ -86,8 +97,8 @@ export class RideFakeBuilder<T, TJSON> extends FakeBuilder<
     return this;
   }
 
-  public withStatus(valueOrFactory: PropOrFactory<RideStatus>): this {
-    this.status = valueOrFactory;
+  public withEncodedPolyline(valueOrFactory: PropOrFactory<string>): this {
+    this.encoded_polyline = valueOrFactory;
     return this;
   }
 
@@ -95,13 +106,16 @@ export class RideFakeBuilder<T, TJSON> extends FakeBuilder<
     const ride = new Ride({
       ride_id: this.callFactory(this._ride_id, index) as RideId,
       customer_id: this.callFactory(this.customer_id, index) as CustomerId,
-      origin: this.callFactory(this.origin, index) as string,
-      destination: this.callFactory(this.destination, index) as string,
+      origin: this.callFactory(this.origin, index) as Geolocation,
+      destination: this.callFactory(this.destination, index) as Geolocation,
       distance: this.callFactory(this.distance, index) as number,
       duration: this.callFactory(this.duration, index) as string,
       driver_id: this.callFactory(this.driver_id, index) as DriverId,
       value: this.callFactory(this.value, index) as number,
-      status: this.callFactory(this.status, index) as RideStatus,
+      encoded_polyline: this.callFactory(
+        this.encoded_polyline,
+        index,
+      ) as string,
     });
 
     ride.validate();

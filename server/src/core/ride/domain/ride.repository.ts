@@ -4,6 +4,7 @@ import {
   SearchParamsConstructorProps,
   SearchResult,
 } from '../../../shared/domain/repository';
+import { RideEstimation } from './ride-estimation.vo';
 import { Ride } from './ride.aggregate';
 import { RideId } from './ride.types';
 
@@ -17,7 +18,7 @@ export class RideSearchParams extends SearchParams<RideFilter> {
     return new RideSearchParams({
       ...props,
       page: props?.page ?? 1,
-      per_page: props?.per_page ?? 15,
+      per_page: props?.paginate ? (props?.per_page ?? 15) : Infinity,
       sort: props?.sort ?? 'ride_id',
       sort_dir: props?.sort_dir ?? 'asc',
     });
@@ -37,4 +38,11 @@ export interface IRideRepository
     RideFilter,
     RideSearchParams,
     RideSearchResult
-  > {}
+  > {
+  registerEstimation(estimation: RideEstimation): Promise<void>;
+  removeEstimation(estimation_id: number): Promise<void>;
+  findEstimation(
+    origin: string,
+    destination: string,
+  ): Promise<RideEstimation | null>;
+}
