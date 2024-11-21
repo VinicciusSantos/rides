@@ -2,12 +2,12 @@ import axios, { AxiosError, AxiosInstance } from 'axios';
 
 import { HttpRequestFailedError } from '../../../domain/errors';
 import {
-  HttpService,
+  IHttpService,
   HTTPStatus,
   RequestConfig,
 } from '../../../domain/services';
 
-export class AxiosHttpService implements HttpService {
+export class AxiosHttpService implements IHttpService {
   private axiosInstance: AxiosInstance;
 
   constructor() {

@@ -12,7 +12,7 @@ export enum HttpContentTypes {
   X_WWW_FORM_URLENCODED = 'application/x-www-form-urlencoded',
 }
 
-export interface HttpService {
+export interface IHttpService {
   get<Receive>(props: RequestConfig): Promise<Receive>;
   post<Receive>(props: RequestConfig): Promise<Receive>;
   put<Receive>(props: RequestConfig): Promise<Receive>;

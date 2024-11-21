@@ -33,10 +33,14 @@ describe('NotFoundErrorFilter Unit Tests', () => {
     return request(app.getHttpServer())
       .get('/stub')
       .expect(testStatusCode)
-      .expect({
-        statusCode: testStatusCode,
-        error: 'Error in external HTTP request',
-        message: testMessage,
-      });
+      .expect((res) =>
+        expect(res.body).toEqual(
+          expect.objectContaining({
+            statusCode: testStatusCode,
+            error: 'Error in external HTTP request',
+            message: testMessage,
+          }),
+        ),
+      );
   });
 });

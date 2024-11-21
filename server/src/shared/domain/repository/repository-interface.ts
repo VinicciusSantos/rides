@@ -13,7 +13,7 @@ export interface IRepository<
   sortableFields: string[];
   insert(entity: E): Promise<void>;
   findOne(filter: Filter): Promise<E | null>;
-  findAll(props: SearchInput): Promise<SearchOutput>;
+  findAll(props?: SearchInput): Promise<SearchOutput>;
   update(entity: E): Promise<void>;
   delete(entity_id: EntityId): Promise<void>;
 }

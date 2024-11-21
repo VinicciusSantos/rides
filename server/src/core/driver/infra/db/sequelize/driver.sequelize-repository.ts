@@ -66,13 +66,16 @@ export class DriverSequelizeRepository implements IDriverRepository {
     throw new Error('Method not implemented.');
   }
 
-  private async _search(props: DriverSearchParams) {
+  private async _search(
+    props: DriverSearchParams = DriverSearchParams.create(),
+  ) {
     const { offset, filter, per_page } = props;
-    const { driver_id } = filter || {};
+    const { driver_id, min_km_gte: km_gte } = filter || {};
 
     const data = await this.driverModel.findAndCountAll({
       where: {
         ...OpBuilder.Exact('driver_id', driver_id),
+        ...OpBuilder.GTE('minimum_km', km_gte),
       },
       include: DriverSequelizeRepository.relations,
       order: OpBuilder.Order(props),

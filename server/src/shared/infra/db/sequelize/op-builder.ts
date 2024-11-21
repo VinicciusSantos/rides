@@ -27,6 +27,10 @@ export class OpBuilder {
     return value ? { [key]: { [Op.like]: `%${value}%` } } : {};
   }
 
+  public static GTE(key: string, value?: number) {
+    return value ? { [key]: { [Op.gte]: value } } : {};
+  }
+
   /**
    * MultipleExact is a helper function to build an where condition to search for exact values in a array of values
    * @param key is the column name

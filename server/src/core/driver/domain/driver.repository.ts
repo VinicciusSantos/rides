@@ -9,6 +9,7 @@ import { DriverId } from './driver.types';
 
 export interface DriverFilter {
   driver_id?: number;
+  min_km_gte?: number;
 }
 
 export class DriverSearchParams extends SearchParams<DriverFilter> {

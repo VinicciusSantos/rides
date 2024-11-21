@@ -30,6 +30,7 @@ export class Config {
         logging: process.env.DB_LOGGING === 'true',
         port: Number(process.env.DB_PORT),
       },
+      google_api_key: process.env.GOOGLE_API_KEY,
     });
 
     ConfigValidator.validate(Config._env);
