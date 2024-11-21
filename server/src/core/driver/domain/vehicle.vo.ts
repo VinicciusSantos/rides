@@ -51,8 +51,7 @@ export class Vehicle extends ValueObject {
       brand: this.brand,
       year: this.year,
       description: this.description,
-      formatted_name:
-        `${this._brand} ${this._model} ${this._year} ${this._description}`,
+      formatted_name: `${this._brand} ${this._model} ${this._year} ${this._description}`,
     };
   }
 }

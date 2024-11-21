@@ -9,7 +9,7 @@ export class Geolocation extends ValueObject {
   constructor(
     public readonly latitude: number,
     public readonly longitude: number,
-    public readonly address?: string
+    public readonly address?: string,
   ) {
     super();
   }

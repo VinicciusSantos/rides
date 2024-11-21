@@ -1,4 +1,7 @@
-import { AxiosHttpService, GoogleMapsService } from '../../shared/infra/services';
+import {
+  AxiosHttpService,
+  GoogleMapsService,
+} from '../../shared/infra/services';
 
 export const HTTP_SERVICE_PROVIDER = {
   provide: 'HttpService',
