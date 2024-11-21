@@ -1,5 +1,5 @@
 import { AggregateRoot } from '../../../shared/domain';
-import { Car } from './car.vo';
+import { Vehicle } from './vehicle.vo';
 import { DriverFakeBuilder } from './driver.fake-builder';
 import {
   DriverConstructorProps,
@@ -16,7 +16,7 @@ export class Driver
   private readonly _driver_id: DriverId;
   private _name: string;
   private _description: string;
-  private _car: Car;
+  private _vehicle: Vehicle;
   private _rating: number;
   private _fee_by_km: number;
   private _minimum_km: number;
@@ -37,8 +37,8 @@ export class Driver
     return this._description;
   }
 
-  public get car(): Car {
-    return this._car;
+  public get vehicle(): Vehicle {
+    return this._vehicle;
   }
 
   public get rating(): number {
@@ -72,7 +72,7 @@ export class Driver
     this._driver_id = props.driver_id;
     this._name = props.name;
     this._description = props.description;
-    this._car = props.car;
+    this._vehicle = props.vehicle;
     this._rating = props.rating;
     this._fee_by_km = props.fee_by_km;
     this._minimum_km = props.minimum_km;
@@ -87,7 +87,7 @@ export class Driver
       driver_id: this.driver_id.id,
       name: this.name,
       description: this.description,
-      car: this.car.toJSON(),
+      vehicle: this.vehicle.toJSON(),
       rating: this.rating,
       fee_by_km: this.fee_by_km,
       minimum_km: this.minimum_km,

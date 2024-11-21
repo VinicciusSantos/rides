@@ -70,12 +70,12 @@ export class DriverSequelizeRepository implements IDriverRepository {
     props: DriverSearchParams = DriverSearchParams.create(),
   ) {
     const { offset, filter, per_page } = props;
-    const { driver_id, min_km_gte: km_gte } = filter || {};
+    const { driver_id, min_km_lte } = filter || {};
 
     const data = await this.driverModel.findAndCountAll({
       where: {
         ...OpBuilder.Exact('driver_id', driver_id),
-        ...OpBuilder.LTE('minimum_km', km_gte),
+        ...OpBuilder.Lte('minimum_km', min_km_lte),
       },
       include: DriverSequelizeRepository.relations,
       order: OpBuilder.Order(props),

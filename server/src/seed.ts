@@ -1,5 +1,4 @@
-import { Driver, DriverId } from './core/driver/domain';
-import { Car } from './core/driver/domain/car.vo';
+import { Driver, DriverId, Vehicle } from './core/driver/domain';
 import {
   DriverModel,
   DriverModelMapper,
@@ -27,11 +26,11 @@ async function seed() {
           name: 'Homer Simpson',
           description:
             'Olá! Sou o Homer, seu motorista camarada! Relaxe e aproveite o passeio, com direito a rosquinhas e boas risadas (e talvez alguns desvios)',
-          car: new Car({
+          vehicle: new Vehicle({
             brand: 'Plymouth',
             model: 'Valiant',
             year: 1973,
-            color: 'rosa e enferrujado',
+            description: 'rosa e enferrujado',
           }),
           fee_by_km: 2.5,
           minimum_km: 1,
@@ -42,11 +41,11 @@ async function seed() {
           name: 'Dominic Toretto',
           description:
             'Ei, aqui é o Dom. Pode entrar, vou te levar com segurança e rapidez ao seu destino. Só não mexa no rádio, a playlist é sagrada.',
-          car: new Car({
+          vehicle: new Vehicle({
             brand: 'Dodge',
             model: 'Charger R/T',
             year: 1970,
-            color: 'modificado',
+            description: 'modificado',
           }),
           fee_by_km: 5,
           minimum_km: 5,
@@ -57,11 +56,11 @@ async function seed() {
           name: 'James Bond',
           description:
             'Boa noite, sou James Bond. À seu dispor para um passeio suave e discreto. Aperte o cinto e aproveite a viagem.',
-          car: new Car({
+          vehicle: new Vehicle({
             brand: 'Aston Martin',
             model: 'DB5',
             year: 1964,
-            color: 'clássico',
+            description: 'clássico',
           }),
           fee_by_km: 10,
           minimum_km: 10,

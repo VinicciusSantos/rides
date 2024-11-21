@@ -64,7 +64,7 @@ export class EstimateRideUsecase
 
     const driversRes = await this.driverRepo.findAll(
       DriverSearchParams.create({
-        filter: { min_km_gte: computedRoute.distanceMeters / 1000 },
+        filter: { min_km_lte: computedRoute.distanceMeters / 1000 },
         // TODO: Implement pagination
         per_page: Infinity,
       }),
@@ -81,7 +81,7 @@ export class EstimateRideUsecase
           id: driver.driver_id,
           name: driver.name,
           description: driver.description,
-          vehicle: driver.car.formatted_name,
+          vehicle: driver.vehicle.formatted_name,
           review: {
             rating: driver.rating,
             comment: 'TODO: Implement review system',

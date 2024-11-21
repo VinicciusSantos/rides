@@ -3,7 +3,7 @@ import {
   OptionalFakeFields,
   PropOrFactory,
 } from '../../../shared/infra/testing';
-import { Car } from './car.vo';
+import { Vehicle } from './vehicle.vo';
 import { Driver } from './driver.aggregate';
 import { DriverId, DriverJSON } from './driver.types';
 
@@ -20,13 +20,12 @@ export class DriverFakeBuilder<T, TJSON> extends FakeBuilder<
 
   private _description?: PropOrFactory<string> = () => this.chance.sentence();
 
-  private _car?: PropOrFactory<Car> = () =>
-    new Car({
+  private _vehicle?: PropOrFactory<Vehicle> = () =>
+    new Vehicle({
       model: this.chance.word(),
       brand: this.chance.word(),
       year: this.chance.integer({ min: 1950, max: new Date().getFullYear() }),
-      color: this.chance.color(),
-      observations: this.chance.sentence(),
+      description: this.chance.sentence(),
     });
 
   private _rating?: PropOrFactory<number> = () =>
@@ -65,8 +64,8 @@ export class DriverFakeBuilder<T, TJSON> extends FakeBuilder<
     return this;
   }
 
-  public withCar(valueOrFactory: PropOrFactory<Car>): this {
-    this._car = valueOrFactory;
+  public withCar(valueOrFactory: PropOrFactory<Vehicle>): this {
+    this._vehicle = valueOrFactory;
     return this;
   }
 
@@ -90,7 +89,7 @@ export class DriverFakeBuilder<T, TJSON> extends FakeBuilder<
       driver_id: this.callFactory(this._driver_id, index) as DriverId,
       name: this.callFactory(this._name, index) as string,
       description: this.callFactory(this._description, index) as string,
-      car: this.callFactory(this._car, index) as Car,
+      vehicle: this.callFactory(this._vehicle, index) as Vehicle,
       rating: this.callFactory(this._rating, index) as number,
       fee_by_km: this.callFactory(this._fee_by_km, index) as number,
       minimum_km: this.callFactory(this._minimum_km, index) as number,

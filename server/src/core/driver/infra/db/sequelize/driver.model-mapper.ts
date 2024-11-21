@@ -1,6 +1,6 @@
 import { LoadEntityError } from '../../../../../shared/domain/validators';
 import { Driver, DriverId } from '../../../domain';
-import { Car } from '../../../domain/car.vo';
+import { Vehicle } from '../../../domain/vehicle.vo';
 import { DriverModel, DriverModelProps } from './driver.model';
 
 export class DriverModelMapper {
@@ -9,12 +9,11 @@ export class DriverModelMapper {
     const driver = new Driver({
       ...rawData,
       driver_id: new DriverId(rawData.driver_id),
-      car: new Car({
-        brand: rawData.car.brand,
-        color: rawData.car.color,
-        model: rawData.car.model,
-        year: rawData.car.year,
-        observations: rawData.car.observations || undefined,
+      vehicle: new Vehicle({
+        brand: rawData.vehicle.brand,
+        description: rawData.vehicle.description || undefined,
+        model: rawData.vehicle.model,
+        year: rawData.vehicle.year,
       }),
       fee_by_km: Number(rawData.fee_by_km),
       minimum_km: Number(rawData.minimum_km),
@@ -36,7 +35,7 @@ export class DriverModelMapper {
       driver_id: driverInfos.driver_id,
       name: driverInfos.name,
       description: driverInfos.description,
-      car: driverInfos.car,
+      vehicle: driverInfos.vehicle,
       rating: driverInfos.rating,
       fee_by_km: driverInfos.fee_by_km,
       minimum_km: driverInfos.minimum_km,

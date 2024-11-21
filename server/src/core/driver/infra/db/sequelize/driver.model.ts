@@ -5,13 +5,13 @@ import {
   PrimaryKey,
   Table,
 } from 'sequelize-typescript';
-import { CarJSON } from '../../../domain/car.vo';
+import { VehicleJSON } from '../../../domain/vehicle.vo';
 
 export interface DriverModelProps {
   driver_id: number;
   name: string;
   description: string;
-  car: CarJSON;
+  vehicle: VehicleJSON;
   rating: number;
   fee_by_km: number;
   minimum_km: number;
@@ -30,7 +30,7 @@ export class DriverModel extends Model<DriverModelProps> {
   public declare description: string;
 
   @Column({ type: DataType.JSON })
-  public declare car: CarJSON;
+  public declare vehicle: VehicleJSON;
 
   @Column({ type: DataType.FLOAT })
   public declare rating: number;

@@ -1,28 +1,25 @@
 import { ValueObject } from '../../../shared/domain/value-objects';
 
-export interface CarConstructorProps {
+export interface VehicleConstructorProps {
   model: string;
   brand: string;
   year: number;
-  color: string;
-  observations?: string;
+  description?: string;
 }
 
-export interface CarJSON {
+export interface VehicleJSON {
   model: string;
   brand: string;
   year: number;
-  color: string;
-  observations: string | null;
+  description: string | null;
   formatted_name: string;
 }
 
-export class Car extends ValueObject {
+export class Vehicle extends ValueObject {
   private readonly _model: string;
   private readonly _brand: string;
   private readonly _year: number;
-  private readonly _color: string;
-  private readonly _observations: string;
+  private readonly _description: string;
 
   public get model(): string {
     return this._model;
@@ -36,32 +33,26 @@ export class Car extends ValueObject {
     return this._year;
   }
 
-  public get color(): string {
-    return this._color;
+  public get description(): string {
+    return this._description;
   }
 
-  public get observations(): string {
-    return this._observations;
-  }
-
-  constructor(props: CarConstructorProps) {
+  constructor(props: VehicleConstructorProps) {
     super();
     this._model = props.model;
     this._brand = props.brand;
     this._year = props.year;
-    this._color = props.color;
-    this._observations = props.observations || '';
+    this._description = props.description || '';
   }
 
-  public toJSON(): CarJSON {
+  public toJSON(): VehicleJSON {
     return {
       model: this.model,
       brand: this.brand,
       year: this.year,
-      color: this.color,
-      observations: this.observations,
+      description: this.description,
       formatted_name:
-        `${this._brand} ${this._model} ${this._year} ${this._color} ${this._observations}`.trim(),
+        `${this._brand} ${this._model} ${this._year} ${this._description}`,
     };
   }
 }

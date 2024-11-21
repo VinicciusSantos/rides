@@ -1,4 +1,4 @@
-import { Car } from '../car.vo';
+import { Vehicle } from '../vehicle.vo';
 import { Driver } from '../driver.aggregate';
 import { DriverFakeBuilder } from '../driver.fake-builder';
 import { DriverId } from '../driver.types';
@@ -16,7 +16,7 @@ describe('DriverFakeBuilder Unit Tests', () => {
         brand: expect.any(String),
         model: expect.any(String),
         year: expect.any(Number),
-        color: expect.any(String),
+        description: expect.any(String),
         observations: expect.any(String),
         formatted_name: expect.any(String),
       },
@@ -44,11 +44,11 @@ describe('DriverFakeBuilder Unit Tests', () => {
       .withDescription((index) => `Description ${index}`)
       .withCar(
         (index) =>
-          new Car({
+          new Vehicle({
             brand: `Brand ${index}`,
             model: `Model ${index}`,
             year: 2000 + index,
-            color: `Color ${index}`,
+            description: `Description ${index}`,
           }),
       )
       .withRating((index) => index)
@@ -67,7 +67,7 @@ describe('DriverFakeBuilder Unit Tests', () => {
           brand: `Brand ${index}`,
           model: `Model ${index}`,
           year: 2000 + index,
-          color: `Color ${index}`,
+          description: `Description ${index}`,
           observations: '',
           formatted_name: expect.any(String),
         },

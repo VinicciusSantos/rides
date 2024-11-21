@@ -1,4 +1,4 @@
-import { Car } from '../car.vo';
+import { Vehicle } from '../vehicle.vo';
 import { Driver } from '../driver.aggregate';
 import {
   DriverConstructorProps,
@@ -14,11 +14,11 @@ describe('DriverAggregate Unit Tests', () => {
         name: 'Homer Simpson',
         description:
           'Olá! Sou o Homer, seu motorista camarada! Relaxe e aproveite o passeio, com direito a rosquinhas e boas risadas (e talvez alguns desvios).',
-        car: new Car({
+        vehicle: new Vehicle({
           brand: 'Plymouth',
           model: 'Valiant',
           year: 1973,
-          color: 'rosa e enferrujado',
+          description: 'rosa e enferrujado',
         }),
         rating: 2,
         fee_by_km: 2.5,
@@ -33,7 +33,7 @@ describe('DriverAggregate Unit Tests', () => {
         driver_id: expect.any(Number),
         name: driver.name,
         description: driver.description,
-        car: driver.car.toJSON(),
+        car: driver.vehicle.toJSON(),
         rating: driver.rating,
         fee_by_km: driver.fee_by_km,
         minimum_km: driver.minimum_km,
@@ -47,11 +47,11 @@ describe('DriverAggregate Unit Tests', () => {
         name: 'Homer Simpson',
         description:
           'Olá! Sou o Homer, seu motorista camarada! Relaxe e aproveite o passeio, com direito a rosquinhas e boas risadas (e talvez alguns desvios).',
-        car: new Car({
+        vehicle: new Vehicle({
           brand: 'Plymouth',
           model: 'Valiant',
           year: 1973,
-          color: 'rosa e enferrujado',
+          description: 'rosa e enferrujado',
         }),
         rating: 2,
         fee_by_km: 2.5,
@@ -66,7 +66,7 @@ describe('DriverAggregate Unit Tests', () => {
         driver_id: expect.any(Number),
         name: driver.name,
         description: driver.description,
-        car: driver.car.toJSON(),
+        car: driver.vehicle.toJSON(),
         rating: driver.rating,
         fee_by_km: driver.fee_by_km,
         minimum_km: driver.minimum_km,
