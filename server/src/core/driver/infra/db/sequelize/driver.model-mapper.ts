@@ -21,11 +21,6 @@ export class DriverModelMapper {
     driver.validate();
 
     if (driver.notification.hasErrors()) {
-      console.log(
-        '🚀 ~ DriverModelMapper ~ toEntity ~ driver.notification.toJSON():',
-        driver,
-        driver.notification.toJSON(),
-      );
       throw new LoadEntityError(driver.notification.toJSON());
     }
 

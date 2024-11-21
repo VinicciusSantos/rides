@@ -13,10 +13,6 @@ export class CustomerModelMapper {
     customer.validate();
 
     if (customer.notification.hasErrors()) {
-      console.log(
-        '🚀 ~ CustomerModelMapper ~ toAggregate ~ customer:',
-        customer,
-      );
       throw new LoadEntityError(customer.notification.toJSON());
     }
 

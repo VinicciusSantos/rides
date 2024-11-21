@@ -22,7 +22,7 @@ describe('Clear object', () => {
 
   it('should return same object when a key have a non-empty value', () => {
     const validValue = {
-      DB_DATABASE: 'shopperDB',
+      DB_DATABASE: 'ridesDB',
       DB_USERNAME: 'root',
       DB_PASSWORD: 'root',
       DB_DIALECT: 'mysql',

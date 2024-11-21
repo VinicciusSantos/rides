@@ -32,12 +32,12 @@ export class DriverModel extends Model<DriverModelProps> {
   @Column({ type: DataType.JSON })
   public declare car: CarJSON;
 
-  @Column({ type: DataType.INTEGER })
+  @Column({ type: DataType.DECIMAL })
   public declare rating: number;
 
-  @Column({ type: DataType.INTEGER })
+  @Column({ type: DataType.DECIMAL })
   public declare fee_by_km: number;
 
-  @Column({ type: DataType.INTEGER })
+  @Column({ type: DataType.DECIMAL })
   public declare minimum_km: number;
 }

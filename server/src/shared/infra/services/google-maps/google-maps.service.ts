@@ -52,7 +52,6 @@ export class GoogleMapsService implements IMapsService {
     });
 
     const [route] = response.routes;
-    console.log('🚀 ~ GoogleMapsService ~ route:', route);
     if (!route) {
       throw new Error('No route found');
     }

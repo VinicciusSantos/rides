@@ -1,6 +1,7 @@
-import { Controller, Get, Inject } from '@nestjs/common';
+import { Body, Controller, Inject, Post } from '@nestjs/common';
 
 import { EstimateRideUsecase } from '../../core/ride/application/usecases';
+import { EstimateRideDto } from './dtos';
 
 @Controller('ride')
 export class RideController {
@@ -9,12 +10,13 @@ export class RideController {
     private readonly estimateRideUsecase: EstimateRideUsecase,
   ) {}
 
-  @Get('estimate')
-  public async estimateRide() {
-    await this.estimateRideUsecase.execute({
+  @Post('estimate')
+  public async estimateRide(@Body() body: EstimateRideDto) {
+    const response = await this.estimateRideUsecase.execute({
       customer_id: '1',
-      origin: 'Rua Maria Aurora da conceição',
-      destination: 'Rua São Pedro, juazeiro do norte',
+      origin: body.origin,
+      destination: body.destination,
     });
+    console.log('🚀 ~ RideController ~ estimateRide ~ response:', response);
   }
 }
