@@ -14,7 +14,8 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "lint": "eslint . --ext .ts",
     "prettier": "prettier --write 'src/**/*.{js,jsx,ts,tsx,css,json}' --config ./.prettierrc",
-    "migrate:ts": "node -r ts-node/register/transpile-only -r tsconfig-paths/register ./src/migrate.ts"
+    "migrate:ts": "node -r ts-node/register/transpile-only -r tsconfig-paths/register ./src/migrate.ts",
+    "seed:ts": "ts-node ./src/seed.ts"
   },
   "license": "ISC",
   "dependencies": {

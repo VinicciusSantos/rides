@@ -17,6 +17,6 @@ export class RideController {
       origin: body.origin,
       destination: body.destination,
     });
-    console.log('🚀 ~ RideController ~ estimateRide ~ response:', response);
+    return response;
   }
 }

@@ -46,7 +46,7 @@ export class RideModel extends Model<RideModelProps> {
   @Column({ type: DataType.UUID })
   public declare driver_id: string;
 
-  @Column({ type: DataType.DECIMAL })
+  @Column({ type: DataType.FLOAT })
   public declare value: number;
 
   @Column({ type: DataType.ENUM, values: Object.values(RideStatus) })

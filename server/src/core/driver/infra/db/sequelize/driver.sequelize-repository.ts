@@ -75,7 +75,7 @@ export class DriverSequelizeRepository implements IDriverRepository {
     const data = await this.driverModel.findAndCountAll({
       where: {
         ...OpBuilder.Exact('driver_id', driver_id),
-        ...OpBuilder.GTE('minimum_km', km_gte),
+        ...OpBuilder.LTE('minimum_km', km_gte),
       },
       include: DriverSequelizeRepository.relations,
       order: OpBuilder.Order(props),

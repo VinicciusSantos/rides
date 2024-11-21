@@ -27,8 +27,8 @@ export class OpBuilder {
     return value ? { [key]: { [Op.like]: `%${value}%` } } : {};
   }
 
-  public static GTE(key: string, value?: number) {
-    return value ? { [key]: { [Op.gte]: value } } : {};
+  public static LTE(key: string, value?: number) {
+    return value ? { [key]: { [Op.lte]: value } } : {};
   }
 
   /**

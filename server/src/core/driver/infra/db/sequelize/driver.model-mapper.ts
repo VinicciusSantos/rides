@@ -16,6 +16,9 @@ export class DriverModelMapper {
         year: rawData.car.year,
         observations: rawData.car.observations || undefined,
       }),
+      fee_by_km: Number(rawData.fee_by_km),
+      minimum_km: Number(rawData.minimum_km),
+      rating: Number(rawData.rating),
     });
 
     driver.validate();

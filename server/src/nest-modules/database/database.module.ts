@@ -4,7 +4,7 @@ import { Sequelize } from 'sequelize';
 
 import { Config } from '../../shared/infra/config';
 import { UnitOfWorkSequelize } from '../../shared/infra/db/sequelize';
-import { SEQUELIZE_MODELS } from './constants';
+import { SEQUELIZE_MODELS } from '../../shared/infra/db/sequelize/constants';
 
 @Global()
 @Module({

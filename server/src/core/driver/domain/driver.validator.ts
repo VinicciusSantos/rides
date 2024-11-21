@@ -24,7 +24,6 @@ const carSchema = z.object({
     .max(255, { message: 'Car color must be at most 255 characters' }),
   observations: z
     .string()
-    .min(1, { message: 'Car observations must be at least 1 character' })
     .max(255, { message: 'Car observations must be at most 255 characters' })
     .nullable()
     .optional(),
@@ -45,17 +44,14 @@ export class DriverValidator extends ClassValidatorFields {
     car: carSchema,
     rating: z
       .number({ message: 'Driver rating should be a number' })
-      .int({ message: 'Driver rating should be an integer' })
       .gte(0, { message: 'Driver rating should be a positive number' })
       .max(5, { message: 'Driver rating should be at most 5' }),
     fee_by_km: z
       .number({ message: 'Driver fee by km should be a number' })
-      .int({ message: 'Driver fee by km should be an integer' })
       .positive({ message: 'Driver fee by km should be a positive number' })
       .gt(0, { message: 'Driver fee by km should be greater than 0' }),
     minimum_km: z
       .number({ message: 'Driver minimum km should be a number' })
-      .int({ message: 'Driver minimum km should be an integer' })
       .positive({ message: 'Driver minimum km should be a positive number' }),
   });
 }

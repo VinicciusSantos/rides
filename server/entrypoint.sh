@@ -12,5 +12,8 @@ done
 echo "Running migrations..."
 npm run migrate:ts -- up
 
+echo "Running seeders..."
+npm run seed:ts
+
 echo "Starting the server..."
 exec "$@"

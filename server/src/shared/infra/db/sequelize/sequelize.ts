@@ -1,6 +1,8 @@
-import { Sequelize } from 'sequelize';
-import { Config } from '../../config';
+import { Sequelize } from 'sequelize-typescript';
+
 import { IDatabase } from '../../../domain';
+import { Config } from '../../config';
+import { SEQUELIZE_MODELS } from './constants';
 
 export class SequelizeDb {
   private static instance: Sequelize;
@@ -15,6 +17,7 @@ export class SequelizeDb {
         dialect,
         port,
         logging,
+        models: SEQUELIZE_MODELS,
       });
     }
 
