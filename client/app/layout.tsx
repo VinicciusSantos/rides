@@ -1,9 +1,13 @@
+"use client";
+
 import "./globals.css";
 
 import { ThemeProvider } from "@/components/theme-provider";
+import { Libraries, LoadScript } from "@react-google-maps/api";
 import localFont from "next/font/local";
 
-import type { Metadata } from "next";
+const googleImportedLibraries: Libraries = ["places"];
+
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -15,10 +19,6 @@ const geistMono = localFont({
   weight: "100 900",
 });
 
-export const metadata: Metadata = {
-  title: "Rides",
-};
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -29,14 +29,19 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
+        <LoadScript
+          googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!}
+          libraries={googleImportedLibraries}
         >
-          {children}
-        </ThemeProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+          </ThemeProvider>
+        </LoadScript>
       </body>
     </html>
   );

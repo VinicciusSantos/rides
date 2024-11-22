@@ -22,9 +22,9 @@ function Logo() {
         y2="208"
         fill="none"
         stroke="hsl(var(--primary))"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="32"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="32"
       ></line>
       <line
         x1="192"
@@ -33,9 +33,9 @@ function Logo() {
         y2="192"
         fill="none"
         stroke="hsl(var(--primary))"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="32"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="32"
       ></line>
     </svg>
   );

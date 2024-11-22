@@ -1,7 +1,7 @@
 "use client";
 
+import { GoogleMap } from "@react-google-maps/api";
 import { useEffect, useState } from "react";
-import { GoogleMap, LoadScript } from "@react-google-maps/api";
 
 const mapContainerStyle = {
   width: "100%",
@@ -16,30 +16,20 @@ export default function Map({ ...rest }: MapProps) {
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setCenter({
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          });
-        },
-        (error) => {
-          console.error("Erro ao obter localização do usuário:", error);
-        }
+        ({ coords }) =>
+          setCenter({ lat: coords.latitude, lng: coords.longitude }),
+        (error) => console.error("Error getting current position", error)
       );
     }
   }, []);
 
   return (
     <div {...rest}>
-      <LoadScript
-        googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!}
-      >
-        <GoogleMap
-          mapContainerStyle={mapContainerStyle}
-          center={center}
-          zoom={14}
-        ></GoogleMap>
-      </LoadScript>
+      <GoogleMap
+        mapContainerStyle={mapContainerStyle}
+        center={center}
+        zoom={10}
+      ></GoogleMap>
     </div>
   );
 }

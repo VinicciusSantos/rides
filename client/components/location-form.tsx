@@ -15,6 +15,8 @@ import {
 } from "@/components/ui/form";
 import { CarTaxiFront } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useState } from "react";
+import { Autocomplete, Libraries, LoadScript } from "@react-google-maps/api";
 
 const locationFormSchema = z.object({
   origin: z.string().min(1, "Origin is required."),
@@ -37,6 +39,21 @@ export function LocationForm({ onSubmit, className }: LocationFormProps) {
     },
   });
 
+  const [autocompleteOrigin, setAutocompleteOrigin] =
+    useState<google.maps.places.Autocomplete | null>(null);
+  const [autocompleteDestination, setAutocompleteDestination] =
+    useState<google.maps.places.Autocomplete | null>(null);
+
+  const handlePlaceSelect = (
+    autocomplete: google.maps.places.Autocomplete | null,
+    onChange: (value: string) => void
+  ) => {
+    if (autocomplete) {
+      const place = autocomplete.getPlace();
+      onChange(place?.formatted_address || "");
+    }
+  };
+
   return (
     <Form {...form}>
       <form
@@ -50,7 +67,14 @@ export function LocationForm({ onSubmit, className }: LocationFormProps) {
             <FormItem>
               <FormLabel>Origin</FormLabel>
               <FormControl>
-                <Input placeholder="Enter pickup location" {...field} />
+                <Autocomplete
+                  onLoad={setAutocompleteOrigin}
+                  onPlaceChanged={() =>
+                    handlePlaceSelect(autocompleteOrigin, field.onChange)
+                  }
+                >
+                  <Input placeholder="Enter pickup location" {...field} />
+                </Autocomplete>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -64,7 +88,14 @@ export function LocationForm({ onSubmit, className }: LocationFormProps) {
             <FormItem>
               <FormLabel>Destination</FormLabel>
               <FormControl>
-                <Input placeholder="Enter drop-off location" {...field} />
+                <Autocomplete
+                  onLoad={setAutocompleteDestination}
+                  onPlaceChanged={() =>
+                    handlePlaceSelect(autocompleteDestination, field.onChange)
+                  }
+                >
+                  <Input placeholder="Enter drop-off location" {...field} />
+                </Autocomplete>
               </FormControl>
               <FormMessage />
             </FormItem>
