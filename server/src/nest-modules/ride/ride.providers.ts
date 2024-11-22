@@ -48,10 +48,9 @@ const USE_CASES = {
       maps: IMapsService,
     ) => new EstimateRideUsecase(rideRepo, driverRepo, maps),
     inject: [
-      'UnitOfWork',
-      MAPS_SERVICE_PROVIDER.provide,
-      DRIVER_PROVIDERS.REPOSITORIES.DRIVER_REPOSITORY.provide,
       REPOSITORIES.RIDE_REPOSITORY.provide,
+      DRIVER_PROVIDERS.REPOSITORIES.DRIVER_REPOSITORY.provide,
+      MAPS_SERVICE_PROVIDER.provide,
     ],
   },
   CONFIRM_RIDE_USECASE: {
