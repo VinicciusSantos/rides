@@ -23,7 +23,7 @@ export default function Home() {
         <Map className="w-full h-2/5" />
         <div className="flex justify-center w-full mb-28">
           <LocationForm
-            className="w-1/3 absolute transform -translate-y-1/2 bg-background p-6 rounded-lg shadow-lg"
+            className="w-1/3 max-w-[450px] absolute transform -translate-y-1/2 bg-background p-6 rounded-lg shadow-lg"
             onSubmit={handleSubmit}
           />
         </div>

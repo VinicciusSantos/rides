@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { ThemeToggle } from "./theme-toggle";
 import { Button } from "./ui/button";
 import {
@@ -80,10 +81,12 @@ export function Header() {
           <ThemeToggle />
 
           <Button className="flex gap-4" variant="ghost">
-            Log in
+            <Link href="/sign-in">Sign in</Link>
           </Button>
 
-          <Button className="flex gap-4">Sign Up</Button>
+          <Button className="flex gap-4">
+            <Link href="/sign-up">Sign up</Link>
+          </Button>
         </div>
       </div>
     </header>
