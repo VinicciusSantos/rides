@@ -17,7 +17,7 @@ import {
 import { CarTaxiFront } from "lucide-react";
 import { useState } from "react";
 import { Autocomplete } from "@react-google-maps/api";
-import { estimateRide, EstimateRideResponse } from "@/services/ride.service";
+import { estimateRide } from "@/services/ride.service";
 import { setEstimate } from "@/store/slices/ride.slice";
 
 const locationFormSchema = z.object({
@@ -39,6 +39,10 @@ export function LocationForm() {
 
   const form = useForm<LocationFormValues>({
     resolver: zodResolver(locationFormSchema),
+    defaultValues: {
+      origin: "",
+      destination: "",
+    },
   });
 
   const handleSubmit = async (data: LocationFormValues) => {

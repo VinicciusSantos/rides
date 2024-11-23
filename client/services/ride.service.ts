@@ -12,7 +12,13 @@ export interface EstimateRideResponse {
   distance: number;
   duration: string;
   options: EstimatedDriver[];
-  routeResponse: unknown;
+  routeResponse: {
+    distanceMeters: number;
+    duration: string;
+    polyline: {
+      encodedPolyline: string;
+    };
+  };
 }
 
 export interface GeolocationJSON {
