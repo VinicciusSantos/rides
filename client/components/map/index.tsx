@@ -100,15 +100,15 @@ export default function Map({ mapContainerStyle }: MapProps) {
               position={durationPosition}
               options={{ disableAutoPan: true, headerDisabled: true }}
             >
-              <ul className="flex flex-col gap-1">
+              <ul className="flex flex-col gap-1 text-black">
                 <li className="flex gap-1 items-center">
-                  <CarFront className="mr-1 w-4 h-4 text-black" />
-                  <strong className="text-black">Duration:</strong>
+                  <CarFront className="mr-1 w-4 h-4" />
+                  <strong>Duration:</strong>
                   {estimate.duration}
                 </li>
                 <li className="flex gap-1 items-center">
-                  <Route className="mr-1 w-4 h-4 text-black" />
-                  <strong className="text-black">Distance:</strong>
+                  <Route className="mr-1 w-4 h-4" />
+                  <strong>Distance:</strong>
                   {(estimate.distance / 1000).toFixed(1)} km
                 </li>
               </ul>

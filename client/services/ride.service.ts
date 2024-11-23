@@ -36,11 +36,37 @@ export interface EstimatedDriver {
   value: number;
 }
 
+export interface ConfirmRideRequest {
+  customer_id: string;
+  origin: string;
+  destination: string;
+  distance: number;
+  duration: string;
+  driver: {
+    id: number;
+    name: string;
+  };
+  value: number;
+}
+
+export interface ConfirmRideResponse {
+  success?: boolean;
+}
+
 export const estimateRide = async (
   data: EstimateRideRequest
 ): Promise<EstimateRideResponse> =>
   fetcher("/ride/estimate", {
     method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+
+export const confirmRide = async (
+  data: ConfirmRideRequest
+): Promise<ConfirmRideResponse> =>
+  fetcher("/ride/confirm", {
+    method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
   });
