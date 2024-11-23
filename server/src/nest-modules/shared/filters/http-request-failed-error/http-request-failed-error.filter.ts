@@ -11,10 +11,9 @@ export class HttpRequestFailedErrorFilter implements ExceptionFilter {
       .getResponse<Response>()
       .status(exception.statusCode)
       .json({
-        ...exception,
         statusCode: exception.statusCode,
-        error: 'Error in external HTTP request',
-        message: exception.message,
+        error_description: exception.message,
+        details: exception,
       });
   }
 }

@@ -11,6 +11,14 @@ services:
       - /app/node_modules
     env_file:
       - .env
+    environment:
+      - DB_DATABASE=rides_db
+      - DB_USERNAME=rides_db_user
+      - DB_PASSWORD=password
+      - DB_DIALECT=postgres
+      - DB_HOST=db
+      - DB_LOGGING=false
+      - DB_PORT=5432
     depends_on:
       db:
         condition: service_healthy

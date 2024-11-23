@@ -1,6 +1,14 @@
 import { IUsecase } from '../../../../../shared/application';
+import {
+  ErrorType,
+  InvalidDataError,
+} from '../../../../../shared/domain/errors';
 import { IMapsService } from '../../../../../shared/domain/services';
-import { GeolocationJSON } from '../../../../../shared/domain/value-objects';
+import {
+  Geolocation,
+  GeolocationJSON,
+} from '../../../../../shared/domain/value-objects';
+import { requestFailedByInvalidData } from '../../../../../shared/infra/utils/request-failed-by-invalid-data';
 import {
   DriverSearchParams,
   IDriverRepository,
@@ -31,6 +39,11 @@ export interface EstimateRideUsecaseOutput {
   routeResponse: unknown;
 }
 
+const originAndDestinationDifferError = new InvalidDataError(
+  ErrorType.INVALID_DATA,
+  'Origin and destination must be different',
+);
+
 export class EstimateRideUsecase
   implements IUsecase<EstimateRideUsecaseInput, EstimateRideUsecaseOutput>
 {
@@ -44,15 +57,11 @@ export class EstimateRideUsecase
     input: EstimateRideUsecaseInput,
   ): Promise<EstimateRideUsecaseOutput> {
     if (input.origin === input.destination)
-      throw new Error('Origin and destination must be different');
+      throw originAndDestinationDifferError;
 
-    const [origin, destination] = await Promise.all([
-      this.mapsService.getCoordinates(input.origin),
-      this.mapsService.getCoordinates(input.destination),
-    ]);
+    const [origin, destination] = await this.getOriginAndDestination(input);
 
-    if (origin.equals(destination))
-      throw new Error('Origin and destination must be different');
+    if (origin.equals(destination)) throw originAndDestinationDifferError;
 
     const computedRoute = await this.mapsService.computeRoutesByCar(
       origin,
@@ -100,5 +109,21 @@ export class EstimateRideUsecase
       }),
       routeResponse: computedRoute,
     };
+  }
+
+  private async getOriginAndDestination(
+    input: EstimateRideUsecaseInput,
+  ): Promise<[Geolocation, Geolocation]> {
+    try {
+      return await Promise.all([
+        this.mapsService.getCoordinates(input.origin),
+        this.mapsService.getCoordinates(input.destination),
+      ]);
+    } catch (error) {
+      console.log("🚀 ~ error:", error)
+      throw requestFailedByInvalidData(error)
+        ? new InvalidDataError(ErrorType.INVALID_DATA, (error as Error).message)
+        : error;
+    }
   }
 }
