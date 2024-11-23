@@ -34,13 +34,6 @@ type SignUpFormInputs = z.infer<typeof signUpSchema>;
 export function SignUpForm() {
   const form = useForm<SignUpFormInputs>({
     resolver: zodResolver(signUpSchema),
-    defaultValues: {
-      email: "",
-      firstName: "",
-      lastName: "",
-      password: "",
-      confirmPassword: "",
-    },
   });
 
   const onSubmit = async (data: SignUpFormInputs) => {
@@ -114,11 +107,7 @@ export function SignUpForm() {
             <FormItem>
               <FormLabel>Confirm Password</FormLabel>
               <FormControl>
-                <Input
-                  type="password"
-                  placeholder="********"
-                  {...field}
-                />
+                <Input type="password" placeholder="********" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

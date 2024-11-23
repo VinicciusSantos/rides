@@ -4,8 +4,11 @@ import "./globals.css";
 
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/toaster";
+import { store } from "@/store";
 import { Libraries, LoadScript } from "@react-google-maps/api";
 import localFont from "next/font/local";
+import { Provider as ReduxProvider } from "react-redux";
+
 
 const googleImportedLibraries: Libraries = ["places"];
 
@@ -30,20 +33,22 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <LoadScript
-          googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!}
-          libraries={googleImportedLibraries}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
         >
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            {children}
-            <Toaster />
-          </ThemeProvider>
-        </LoadScript>
+          <ReduxProvider store={store}>
+            <LoadScript
+              googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!}
+              libraries={googleImportedLibraries}
+            >
+              {children}
+              <Toaster />
+            </LoadScript>
+          </ReduxProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

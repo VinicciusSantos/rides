@@ -1,6 +1,7 @@
 "use client";
 
 import { useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Input } from "@/components/ui/input";
@@ -14,10 +15,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { CarTaxiFront } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { Autocomplete } from "@react-google-maps/api";
 import { estimateRide, EstimateRideResponse } from "@/services/ride.service";
+import { setEstimate } from "@/store/slices/ride.slice";
 
 const locationFormSchema = z.object({
   origin: z.string().min(1, "Origin is required."),
@@ -28,15 +29,13 @@ type GoogleAutocomplete = google.maps.places.Autocomplete | null;
 
 export type LocationFormValues = z.infer<typeof locationFormSchema>;
 
-interface LocationFormProps {
-  onSubmit: (data: EstimateRideResponse) => void;
-}
-
-export function LocationForm({ onSubmit }: LocationFormProps) {
+export function LocationForm() {
   const [loading, setLoading] = useState(false);
   const [autoOrigin, setAutoOrigin] = useState<GoogleAutocomplete>(null);
   const [autoDestination, setAutoDestination] =
     useState<GoogleAutocomplete>(null);
+
+  const dispatch = useDispatch();
 
   const form = useForm<LocationFormValues>({
     resolver: zodResolver(locationFormSchema),
@@ -44,14 +43,13 @@ export function LocationForm({ onSubmit }: LocationFormProps) {
 
   const handleSubmit = async (data: LocationFormValues) => {
     setLoading(true);
-
     try {
       const estimate = await estimateRide({
-        customer_id: "1", // TODO: Replace with actual customer ID
+        customer_id: "1", // TODO: Replace com ID real do cliente
         origin: data.origin,
         destination: data.destination,
       });
-      onSubmit(estimate);
+      dispatch(setEstimate(estimate));
     } finally {
       setLoading(false);
     }
