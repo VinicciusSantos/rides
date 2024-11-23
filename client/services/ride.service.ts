@@ -1,10 +1,12 @@
-export interface RideEstimateRequest {
+import { fetcher } from "@/lib/fetcher";
+
+export interface EstimateRideRequest {
   customer_id: string;
   origin: string;
   destination: string;
 }
 
-export interface RideEstimateResponse {
+export interface EstimateRideResponse {
   origin: GeolocationJSON;
   destination: GeolocationJSON;
   distance: number;
@@ -28,16 +30,11 @@ export interface EstimatedDriver {
   value: number;
 }
 
-import { fetcher } from "@/lib/fetcher";
-
-export async function getRideEstimate(
-  data: RideEstimateRequest
-): Promise<RideEstimateResponse> {
-  return fetcher<RideEstimateResponse>("/ride/estimate", {
+export const estimateRide = async (
+  data: EstimateRideRequest
+): Promise<EstimateRideResponse> =>
+  fetcher("/ride/estimate", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
   });
-}

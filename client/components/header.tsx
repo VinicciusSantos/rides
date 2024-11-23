@@ -59,7 +59,7 @@ export function Header() {
               <NavigationMenuItem>
                 <a
                   className="transition-colors hover:text-foreground/80 text-foreground/80"
-                  href="localhost:8000/docs"
+                  href={process.env.NEXT_PUBLIC_API_BASE_URL + "/docs"}
                   target="_blank"
                 >
                   API Docs
@@ -80,13 +80,15 @@ export function Header() {
         <div className="flex gap-4">
           <ThemeToggle />
 
-          <Button className="flex gap-4" variant="ghost">
-            <Link href="/sign-in">Sign in</Link>
-          </Button>
+          <Link href="/sign-in">
+            <Button className="flex gap-4" variant="ghost">
+              Sign in
+            </Button>
+          </Link>
 
-          <Button className="flex gap-4">
-            <Link href="/sign-up">Sign up</Link>
-          </Button>
+          <Link href="/sign-up">
+            <Button className="flex gap-4">Sign up</Button>
+          </Link>
         </div>
       </div>
     </header>

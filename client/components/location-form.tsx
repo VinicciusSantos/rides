@@ -17,7 +17,7 @@ import { CarTaxiFront } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { Autocomplete } from "@react-google-maps/api";
-import { getRideEstimate, RideEstimateResponse } from "@/services/ride.service";
+import { estimateRide, EstimateRideResponse } from "@/services/ride.service";
 
 const locationFormSchema = z.object({
   origin: z.string().min(1, "Origin is required."),
@@ -29,38 +29,29 @@ type GoogleAutocomplete = google.maps.places.Autocomplete | null;
 export type LocationFormValues = z.infer<typeof locationFormSchema>;
 
 interface LocationFormProps {
-  className?: string;
-  onSubmit: (data: RideEstimateResponse) => void;
+  onSubmit: (data: EstimateRideResponse) => void;
 }
 
-export function LocationForm({ onSubmit, className }: LocationFormProps) {
+export function LocationForm({ onSubmit }: LocationFormProps) {
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [autoOrigin, setAutoOrigin] = useState<GoogleAutocomplete>(null);
   const [autoDestination, setAutoDestination] =
     useState<GoogleAutocomplete>(null);
 
   const form = useForm<LocationFormValues>({
     resolver: zodResolver(locationFormSchema),
-    defaultValues: {
-      origin: "",
-      destination: "",
-    },
   });
 
   const handleSubmit = async (data: LocationFormValues) => {
     setLoading(true);
-    setError(null);
 
     try {
-      const estimate = await getRideEstimate({
-        customer_id: "1",
+      const estimate = await estimateRide({
+        customer_id: "1", // TODO: Replace with actual customer ID
         origin: data.origin,
         destination: data.destination,
       });
       onSubmit(estimate);
-    } catch (err: unknown) {
-      setError((err as Error).message);
     } finally {
       setLoading(false);
     }
@@ -78,10 +69,7 @@ export function LocationForm({ onSubmit, className }: LocationFormProps) {
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(handleSubmit)}
-        className={cn("space-y-4 p-4 border rounded-lg", className)}
-      >
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
         <FormField
           control={form.control}
           name="origin"
@@ -95,7 +83,11 @@ export function LocationForm({ onSubmit, className }: LocationFormProps) {
                     handlePlaceSelect(autoOrigin, field.onChange)
                   }
                 >
-                  <Input placeholder="Enter pickup location" {...field} />
+                  <Input
+                    placeholder="Enter pickup location"
+                    {...field}
+                    disabled={loading}
+                  />
                 </Autocomplete>
               </FormControl>
               <FormMessage />
@@ -116,7 +108,11 @@ export function LocationForm({ onSubmit, className }: LocationFormProps) {
                     handlePlaceSelect(autoDestination, field.onChange)
                   }
                 >
-                  <Input placeholder="Enter drop-off location" {...field} />
+                  <Input
+                    placeholder="Enter drop-off location"
+                    {...field}
+                    disabled={loading}
+                  />
                 </Autocomplete>
               </FormControl>
               <FormMessage />

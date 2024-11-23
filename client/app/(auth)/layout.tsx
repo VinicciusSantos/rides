@@ -1,3 +1,4 @@
+import { Card } from "@/components/ui/card";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -12,9 +13,7 @@ export default function AuthLayout({
 }>) {
   return (
     <div className="flex items-center justify-center h-screen w-screen">
-      <section className="w-[400px] border bg-background p-6 rounded-lg shadow-lg">
-        {children}
-      </section>
+      <Card className="w-[400px]">{children}</Card>
     </div>
   );
 }

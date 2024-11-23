@@ -3,6 +3,7 @@
 import "./globals.css";
 
 import { ThemeProvider } from "@/components/theme-provider";
+import { Toaster } from "@/components/ui/toaster";
 import { Libraries, LoadScript } from "@react-google-maps/api";
 import localFont from "next/font/local";
 
@@ -40,6 +41,7 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             {children}
+            <Toaster />
           </ThemeProvider>
         </LoadScript>
       </body>

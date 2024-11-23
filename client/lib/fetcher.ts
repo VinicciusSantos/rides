@@ -1,4 +1,11 @@
+import { toast } from "@/hooks/use-toast";
+
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+
+interface APIError {
+  error_code: string;
+  error_description: string;
+}
 
 if (!API_BASE_URL) {
   throw new Error(
@@ -10,12 +17,24 @@ export async function fetcher<T>(
   endpoint: string,
   options?: RequestInit
 ): Promise<T> {
-  const response = await fetch(`${API_BASE_URL}${endpoint}`, options);
+  try {
+    const response = await fetch(`${API_BASE_URL}${endpoint}`, options);
 
-  if (!response.ok) {
-    const errorMessage = await response.text();
-    throw new Error(`API Error: ${response.status} - ${errorMessage}`);
+    if (!response.ok) {
+      const error = await response.json();
+      throw error;
+    }
+    
+    return response.json();
+  } catch (error: unknown) {
+    toast({
+      title: "Request Error",
+      description:
+        (error as APIError).error_description || "Something went wrong.",
+      variant: "destructive",
+      duration: 4000
+    });
+
+    throw error;
   }
-
-  return response.json();
 }

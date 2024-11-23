@@ -1,16 +1,13 @@
 "use client";
 
 import { GoogleMap } from "@react-google-maps/api";
-import { useEffect, useState } from "react";
+import { CSSProperties, useEffect, useState } from "react";
 
-const mapContainerStyle = {
-  width: "100%",
-  height: "100%",
-};
+interface MapProps {
+  mapContainerStyle?: CSSProperties | undefined;
+}
 
-type MapProps = React.HTMLProps<HTMLDivElement>;
-
-export default function Map({ ...rest }: MapProps) {
+export default function Map({ mapContainerStyle }: MapProps) {
   const [center, setCenter] = useState({ lat: 40.7128, lng: -74.006 });
 
   useEffect(() => {
@@ -24,12 +21,10 @@ export default function Map({ ...rest }: MapProps) {
   }, []);
 
   return (
-    <div {...rest}>
-      <GoogleMap
-        mapContainerStyle={mapContainerStyle}
-        center={center}
-        zoom={10}
-      ></GoogleMap>
-    </div>
+    <GoogleMap
+      mapContainerStyle={mapContainerStyle}
+      center={center}
+      zoom={10}
+    ></GoogleMap>
   );
 }
