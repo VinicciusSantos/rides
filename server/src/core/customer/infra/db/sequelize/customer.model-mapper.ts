@@ -1,4 +1,7 @@
-import { LoadEntityError } from '../../../../../shared/domain/validators';
+import {
+  ErrorType,
+  InvalidDataError,
+} from '../../../../../shared/domain/errors';
 import { Customer, CustomerId } from '../../../domain';
 import { CustomerModel, CustomerModelProps } from './customer.model';
 
@@ -13,7 +16,10 @@ export class CustomerModelMapper {
     customer.validate();
 
     if (customer.notification.hasErrors()) {
-      throw new LoadEntityError(customer.notification.toJSON());
+      throw new InvalidDataError(
+        ErrorType.ENTITY_VALIDATION,
+        customer.notification.toString(),
+      );
     }
 
     return customer;

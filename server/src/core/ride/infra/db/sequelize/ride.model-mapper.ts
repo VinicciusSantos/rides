@@ -1,4 +1,7 @@
-import { LoadEntityError } from '../../../../../shared/domain/validators';
+import {
+  ErrorType,
+  InvalidDataError,
+} from '../../../../../shared/domain/errors';
 import { Geolocation } from '../../../../../shared/domain/value-objects';
 import { CustomerId } from '../../../../customer/domain';
 import { DriverId } from '../../../../driver/domain';
@@ -24,7 +27,10 @@ export class RideModelMapper {
     ride.validate();
 
     if (ride.notification.hasErrors()) {
-      throw new LoadEntityError(ride.notification.toJSON());
+      throw new InvalidDataError(
+        ErrorType.ENTITY_VALIDATION,
+        ride.notification.toString(),
+      );
     }
 
     return ride;

@@ -6,6 +6,7 @@ export enum ErrorType {
   INVALID_DISTANCE = 'INVALID_DISTANCE',
   DRIVER_NOT_FOUND = 'DRIVER_NOT_FOUND',
   NO_RIDES_FOUND = 'NO_RIDES_FOUND',
+  ENTITY_VALIDATION = 'ENTITY_VALIDATION',
 }
 
 interface ErrorInfos {
@@ -33,6 +34,10 @@ export const errorInfosMap: Record<ErrorType, ErrorInfos> = {
   [ErrorType.NO_RIDES_FOUND]: {
     httpStatus: HTTPStatus.NOT_FOUND,
     message: 'No rides found',
+  },
+  [ErrorType.ENTITY_VALIDATION]: {
+    httpStatus: HTTPStatus.BAD_REQUEST,
+    message: 'Entity validation failed',
   },
 };
 

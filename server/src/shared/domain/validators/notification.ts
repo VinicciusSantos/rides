@@ -1,3 +1,5 @@
+import { isString } from 'lodash';
+
 export class Notification {
   public errors = new Map<string, string[] | string>();
 
@@ -36,14 +38,25 @@ export class Notification {
   }
 
   public toJSON() {
-    const errors: Array<string | { [key: string]: string[] }> = [];
+    const errors: Array<string | Record<string, string[]>> = [];
     this.errors.forEach((value, key) => {
-      if (typeof value === 'string') {
+      if (isString(value)) {
         errors.push(value);
       } else {
         errors.push({ [key]: value });
       }
     });
     return errors;
+  }
+
+  public toString(): string {
+    return this.toJSON().reduce((acc, curr) => {
+      if (isString(curr)) {
+        return `${acc} | ${curr}`;
+      }
+      const [key] = Object.keys(curr);
+      const value = curr[key].join(', ');
+      return `${acc} ${key}: ${value}\n`;
+    }, '') as string;
   }
 }

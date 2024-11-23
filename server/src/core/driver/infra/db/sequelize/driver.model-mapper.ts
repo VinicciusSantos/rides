@@ -1,4 +1,7 @@
-import { LoadEntityError } from '../../../../../shared/domain/validators';
+import {
+  ErrorType,
+  InvalidDataError,
+} from '../../../../../shared/domain/errors';
 import { Driver, DriverId } from '../../../domain';
 import { Vehicle } from '../../../domain/vehicle.vo';
 import { DriverModel, DriverModelProps } from './driver.model';
@@ -23,7 +26,10 @@ export class DriverModelMapper {
     driver.validate();
 
     if (driver.notification.hasErrors()) {
-      throw new LoadEntityError(driver.notification.toJSON());
+      throw new InvalidDataError(
+        ErrorType.ENTITY_VALIDATION,
+        driver.notification.toString(),
+      );
     }
 
     return driver;

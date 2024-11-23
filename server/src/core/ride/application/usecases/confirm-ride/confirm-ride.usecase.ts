@@ -1,10 +1,11 @@
 import { IUsecase } from '../../../../../shared/application';
-import { IUnitOfWork } from '../../../../../shared/domain/repository';
 import {
-  LoadEntityError,
-  Notification,
-} from '../../../../../shared/domain/validators';
-import { ICustomerRepository } from '../../../../customer/domain';
+  ErrorType,
+  InvalidDataError,
+} from '../../../../../shared/domain/errors';
+import { IUnitOfWork } from '../../../../../shared/domain/repository';
+import { Notification } from '../../../../../shared/domain/validators';
+import { Customer, ICustomerRepository } from '../../../../customer/domain';
 import { Driver, IDriverRepository } from '../../../../driver/domain';
 import { IRideRepository, Ride, RideEstimation } from '../../../domain';
 
@@ -38,27 +39,21 @@ export class ConfirmRideUsecase
   public async execute(
     input: ConfirmRideUsecaseInput,
   ): Promise<ConfirmRideUsecaseOutput> {
-    const { customer_id } = input;
-    const customer = await this.customerRepo.findOne({ customer_id });
-    if (!customer) throw new Error(`Customer with ID ${customer_id} not found`);
-
-    const driver_id = input.driver.id;
-    const driver = await this.driverRepo.findOne({ driver_id });
-    if (!driver) throw new Error(`Driver with ID ${input.driver.id} not found`);
+    const customer = await this.validateCustomer(input.customer_id);
+    const driver = await this.validateDriver(input.driver.id);
 
     const estimatedRide = await this.rideRepo.findEstimation(
       input.origin,
       input.destination,
     );
     if (!estimatedRide) {
-      throw new Error(
+      throw new InvalidDataError(
+        ErrorType.INVALID_DATA,
         'This ride was not estimated. Are you trying to cheat the system? 0_o',
       );
     }
 
-    const rideValidations = this.validateRide(input, estimatedRide, driver);
-    if (rideValidations.hasErrors())
-      throw new LoadEntityError(rideValidations.toJSON());
+    this.validateRide(input, estimatedRide, driver);
 
     const newRide = Ride.create({
       customer_id: customer.customer_id,
@@ -79,11 +74,33 @@ export class ConfirmRideUsecase
     });
   }
 
+  private async validateCustomer(customer_id: string): Promise<Customer> {
+    const customer = await this.customerRepo.findOne({ customer_id });
+    if (!customer) {
+      throw new InvalidDataError(
+        ErrorType.INVALID_DATA,
+        `Customer with ID ${customer_id} not found`,
+      );
+    }
+    return customer;
+  }
+
+  private async validateDriver(driver_id: number): Promise<Driver> {
+    const driver = await this.driverRepo.findOne({ driver_id });
+    if (!driver) {
+      throw new InvalidDataError(
+        ErrorType.INVALID_DATA,
+        `Driver with ID ${driver_id} not found`,
+      );
+    }
+    return driver;
+  }
+
   private validateRide(
     input: ConfirmRideUsecaseInput,
     estimatedRide: RideEstimation,
     driver: Driver,
-  ): Notification {
+  ): void {
     const defaultMsg = 'Error in ride validation: ';
     const notification = new Notification();
 
@@ -108,6 +125,11 @@ export class ConfirmRideUsecase
       );
     }
 
-    return notification;
+    if (notification.hasErrors()) {
+      throw new InvalidDataError(
+        ErrorType.ENTITY_VALIDATION,
+        notification.toString(),
+      );
+    }
   }
 }
