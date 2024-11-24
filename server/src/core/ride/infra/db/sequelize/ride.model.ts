@@ -14,8 +14,8 @@ import {
 export interface RideModelProps {
   ride_id: string;
   customer_id: string;
-  origin: Geolocation;
-  destination: Geolocation;
+  origin: GeolocationJSON;
+  destination: GeolocationJSON;
   distance: number;
   duration: string;
   driver_id: number;
@@ -39,14 +39,14 @@ export class RideModel extends Model<RideModelProps> {
   @Column({ type: DataType.JSON })
   public declare destination: Geolocation;
 
-  @Column({ type: DataType.FLOAT })
+  @Column({ type: DataType.DOUBLE })
   public declare distance: number;
 
   @Column({ type: DataType.STRING })
   public declare duration: string;
 
   // TODO - foreign key
-  @Column({ type: DataType.UUID })
+  @Column({ type: DataType.INTEGER })
   public declare driver_id: string;
 
   @Column({ type: DataType.FLOAT })

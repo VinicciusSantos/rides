@@ -31,10 +31,7 @@ describe('RideSequelizeRepository Unit Tests', () => {
       }))!;
 
       expect(result).toBeDefined();
-      expect(rideJSON).toEqual({
-        ...result.toJSON(),
-        active: true,
-      });
+      expect(rideJSON).toEqual(result.toJSON());
     });
 
     describe('transaction mode', () => {

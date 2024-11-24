@@ -14,19 +14,30 @@ import {
 } from './ride.model';
 
 export class RideModelMapper {
-  public static toAggregate(model: RideModel): Ride {
+  public static toEntity(model: RideModel): Ride {
     const rawData = model.toJSON();
     const ride = new Ride({
       ...rawData,
       ride_id: new RideId(rawData.ride_id),
       customer_id: new CustomerId(rawData.customer_id),
       driver_id: new DriverId(rawData.driver_id),
+      origin: new Geolocation(
+        rawData.origin.latitude,
+        rawData.origin.longitude,
+        rawData.origin.address ?? undefined,
+      ),
+      destination: new Geolocation(
+        rawData.destination.latitude,
+        rawData.destination.longitude,
+        rawData.destination.address ?? undefined,
+      ),
       value: rawData.value ?? undefined,
     });
 
     ride.validate();
 
     if (ride.notification.hasErrors()) {
+      console.log("🚀 ~ RideModelMapper ~ toAggregate ~ ride:", ride)
       throw new InvalidDataError(
         ErrorType.ENTITY_VALIDATION,
         ride.notification.toString(),

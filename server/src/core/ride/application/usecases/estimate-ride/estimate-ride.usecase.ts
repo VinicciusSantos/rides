@@ -120,7 +120,6 @@ export class EstimateRideUsecase
         this.mapsService.getCoordinates(input.destination),
       ]);
     } catch (error) {
-      console.log("🚀 ~ error:", error)
       throw requestFailedByInvalidData(error)
         ? new InvalidDataError(ErrorType.INVALID_DATA, (error as Error).message)
         : error;

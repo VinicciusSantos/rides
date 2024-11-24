@@ -37,8 +37,7 @@ describe('NotFoundErrorFilter Unit Tests', () => {
         expect(res.body).toEqual(
           expect.objectContaining({
             statusCode: testStatusCode,
-            error: 'Error in external HTTP request',
-            message: testMessage,
+            error_description: testMessage,
           }),
         ),
       );

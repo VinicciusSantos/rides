@@ -45,7 +45,12 @@ export class InvalidDataError extends Error {
   public readonly httpStatus!: HTTPStatus;
 
   constructor(type: ErrorType = ErrorType.INVALID_DATA, description?: string) {
-    const { httpStatus, message } = errorInfosMap[type];
+    const unmappedError: ErrorInfos = {
+      httpStatus: HTTPStatus.INTERNAL_SERVER_ERROR,
+      message: `Unmapped error: ${type} - ${description}`, 
+    }
+
+    const { httpStatus, message } = errorInfosMap[type] || unmappedError;
 
     super(description || message);
 

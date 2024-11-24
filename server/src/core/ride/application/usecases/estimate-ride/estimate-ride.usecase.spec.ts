@@ -38,7 +38,7 @@ describe('EstimateRideUsecase', () => {
   });
 
   it('should throw an error if origin and destination coordinates are the same', async () => {
-    const mockCoords = { equals: jest.fn(() => true) } as any;
+    const mockCoords = { equals: jest.fn(() => true) };
     mapsServiceMock.getCoordinates.mockResolvedValueOnce(mockCoords);
     mapsServiceMock.getCoordinates.mockResolvedValueOnce(mockCoords);
 
@@ -57,12 +57,12 @@ describe('EstimateRideUsecase', () => {
     const originMock = {
       toJSON: jest.fn(() => ({ lat: 1, lng: 2 })),
       equals: jest.fn(() => false),
-    } as any;
+    };
 
     const destinationMock = {
       toJSON: jest.fn(() => ({ lat: 3, lng: 4 })),
       equals: jest.fn(() => false),
-    } as any;
+    };
 
     const computedRouteMock = {
       distanceMeters: 10000,

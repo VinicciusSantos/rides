@@ -12,9 +12,11 @@ export class RideValidator extends ClassValidatorFields {
       { id: z.string().uuid() },
       { message: 'Customer ID should be a valid CustomerId' },
     ),
-    driver_id: z
-      .number()
-      .positive({ message: 'Driver ID should be a positive number' }),
+    driver_id: z.object({
+      id: z
+        .number()
+        .positive({ message: 'Driver ID should be a positive number' }),
+    }),
     origin: z.object(
       {
         latitude: z.number(),

@@ -37,7 +37,7 @@ describe('NotFoundErrorFilter Unit Tests', () => {
 
     it(`should catch the ${errorType} error`, () => {
       return request(app.getHttpServer())
-        .get(`/stub?error=${errorType}'`)
+        .get(`/stub?error=${errorType}`)
         .expect(error.httpStatus)
         .expect((res) =>
           expect(res.body).toEqual(

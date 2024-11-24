@@ -1,5 +1,5 @@
 import { EntityJSON } from '../../../shared/domain';
-import { Geolocation, Uuid } from '../../../shared/domain/value-objects';
+import { Geolocation, GeolocationJSON, Uuid } from '../../../shared/domain/value-objects';
 import { CustomerId } from '../../customer/domain';
 import { DriverId } from '../../driver/domain';
 
@@ -31,8 +31,8 @@ export interface RideCreateCommand {
 export type RideJSON = EntityJSON<{
   ride_id: string;
   customer_id: string;
-  origin: Geolocation;
-  destination: Geolocation;
+  origin: GeolocationJSON;
+  destination: GeolocationJSON;
   distance: number;
   duration: string;
   driver_id: number;

@@ -28,8 +28,8 @@ export class RideSequelizeRepository implements IRideRepository {
     private uow: UnitOfWorkSequelize,
   ) {}
 
-  public async insert(entity: Ride): Promise<void> {
-    await this.rideModel.create(RideModelMapper.toModelProps(entity), {
+  public async insert(aggregate: Ride): Promise<void> {
+    await this.rideModel.create(RideModelMapper.toModelProps(aggregate), {
       include: RideSequelizeRepository.relations,
       transaction: this.uow.getTransaction(),
     });
@@ -73,10 +73,7 @@ export class RideSequelizeRepository implements IRideRepository {
   public async registerEstimation(estimation: RideEstimation): Promise<void> {
     await this.rideEstimationModel.create(
       { ...RideEstimationModelMapper.toModelProps(estimation) },
-      {
-        include: RideSequelizeRepository.relations,
-        transaction: this.uow.getTransaction(),
-      },
+      { transaction: this.uow.getTransaction() },
     );
   }
 
@@ -99,14 +96,14 @@ export class RideSequelizeRepository implements IRideRepository {
     return data ? RideEstimationModelMapper.toValueObject(data) : null;
   }
 
-  private async _search(props: RideSearchParams) {
+  private async _search(props: RideSearchParams = RideSearchParams.create()) {
     const { offset, filter, per_page } = props;
-    const { ride_id } = filter || {};
+    const { ride_id, driver_id } = filter || {};
 
     const data = await this.rideModel.findAndCountAll({
       where: {
         ...OpBuilder.Exact('ride_id', ride_id),
-        ...OpBuilder.Exact('driver_id', filter?.driver_id),
+        ...OpBuilder.Exact('driver_id', driver_id),
       },
       include: RideSequelizeRepository.relations,
       order: OpBuilder.Order(props),
@@ -117,7 +114,7 @@ export class RideSequelizeRepository implements IRideRepository {
 
     return {
       ...data,
-      rows: data.rows.map(RideModelMapper.toAggregate),
+      rows: data.rows.map(RideModelMapper.toEntity),
     };
   }
 }

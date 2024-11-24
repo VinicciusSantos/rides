@@ -50,13 +50,11 @@ export class Notification {
   }
 
   public toString(): string {
-    return this.toJSON().reduce((acc, curr) => {
-      if (isString(curr)) {
-        return `${acc} | ${curr}`;
-      }
+    return this.toJSON().map((curr) => {
+      if (isString(curr)) return curr
       const [key] = Object.keys(curr);
       const value = curr[key].join(', ');
-      return `${acc} ${key}: ${value}\n`;
-    }, '') as string;
+      return `${key}: ${value}\n`;
+    }, []).join(" | ") as string;
   }
 }

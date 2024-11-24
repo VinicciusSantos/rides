@@ -13,8 +13,16 @@ describe('RideFakeBuilder Unit Tests', () => {
       ride_id: expect.any(String),
       customer_id: expect.any(String),
       driver_id: expect.any(Number),
-      origin: expect.any(Geolocation),
-      destination: expect.any(Geolocation),
+      origin: {
+        latitude: expect.any(Number),
+        longitude: expect.any(Number),
+        address: expect.any(String),
+      },
+      destination: {
+        latitude: expect.any(Number),
+        longitude: expect.any(Number),
+        address: expect.any(String),
+      },
       distance: expect.any(Number),
       duration: expect.any(String),
       value: expect.any(Number),
@@ -42,7 +50,7 @@ describe('RideFakeBuilder Unit Tests', () => {
       const rides = RideFakeBuilder.aLot(count)
         .withRideId((index) => uuids[index])
         .withCustomerId((index) => uuids[index])
-        .withDriverId((index) => new DriverId(index))
+        .withDriverId((index) => new DriverId(index + 1))
         .withOrigin((index) => new Geolocation(index, index, `Origin ${index}`))
         .withDestination(
           (index) => new Geolocation(index, index, `Destination ${index}`),
@@ -58,7 +66,7 @@ describe('RideFakeBuilder Unit Tests', () => {
         expect(ride.toJSON()).toEqual({
           ride_id: uuids[index].id,
           customer_id: uuids[index].id,
-          driver_id: index,
+          driver_id: index + 1,
           origin: new Geolocation(index, index, `Origin ${index}`),
           destination: new Geolocation(index, index, `Destination ${index}`),
           distance: index,

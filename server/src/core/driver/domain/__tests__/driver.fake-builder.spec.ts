@@ -12,12 +12,11 @@ describe('DriverFakeBuilder Unit Tests', () => {
       driver_id: expect.any(Number),
       name: expect.any(String),
       description: expect.any(String),
-      car: {
+      vehicle: {
         brand: expect.any(String),
         model: expect.any(String),
         year: expect.any(Number),
         description: expect.any(String),
-        observations: expect.any(String),
         formatted_name: expect.any(String),
       },
       rating: expect.any(Number),
@@ -39,7 +38,7 @@ describe('DriverFakeBuilder Unit Tests', () => {
     const count = 5;
 
     const drivers = DriverFakeBuilder.aLot(count)
-      .withDriverId((index) => new DriverId(index))
+      .withDriverId((index) => new DriverId(index + 1))
       .withName((index) => `Driver ${index}`)
       .withDescription((index) => `Description ${index}`)
       .withCar(
@@ -60,15 +59,14 @@ describe('DriverFakeBuilder Unit Tests', () => {
 
     drivers.forEach((driver, index) => {
       expect(driver.toJSON()).toEqual({
-        driver_id: index,
+        driver_id: index + 1,
         name: `Driver ${index}`,
         description: `Description ${index}`,
-        car: {
+        vehicle: {
           brand: `Brand ${index}`,
           model: `Model ${index}`,
           year: 2000 + index,
           description: `Description ${index}`,
-          observations: '',
           formatted_name: expect.any(String),
         },
         rating: index,

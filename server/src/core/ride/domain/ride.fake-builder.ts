@@ -17,33 +17,37 @@ export class RideFakeBuilder<T, TJSON> extends FakeBuilder<
 > {
   protected optionalFields: OptionalFakeFields<RideJSON> = [];
 
-  private _ride_id?: PropOrFactory<RideId> = () => new RideId();
+  private _ride_id: PropOrFactory<RideId> = () => new RideId();
 
-  private customer_id: PropOrFactory<CustomerId> = () => new CustomerId();
+  private _customer_id: PropOrFactory<CustomerId> = () => new CustomerId();
 
-  private origin: PropOrFactory<Geolocation> = () =>
+  private _origin: PropOrFactory<Geolocation> = () =>
     new Geolocation(
       this.chance.latitude(),
       this.chance.longitude(),
       this.chance.address(),
     );
 
-  private destination: PropOrFactory<Geolocation> = () =>
+  private _destination: PropOrFactory<Geolocation> = () =>
     new Geolocation(
       this.chance.latitude(),
       this.chance.longitude(),
       this.chance.address(),
     );
 
-  private distance: PropOrFactory<number> = () => this.chance.natural();
+  private _distance: PropOrFactory<number> = () =>
+    this.chance.integer({ min: 0, max: 1_000 });
 
-  private duration: PropOrFactory<string> = () => this.chance.string();
+  private _duration: PropOrFactory<string> = () =>
+    `${this.chance.integer({ min: 0, max: 10_000 })}s`;
 
-  private driver_id?: PropOrFactory<DriverId> = () => new DriverId();
+  private _driver_id?: PropOrFactory<DriverId> = () =>
+    new DriverId(this.chance.integer({ min: 0, max: 1_000 }));
 
-  private value: PropOrFactory<number> = () => this.chance.floating();
+  private _value: PropOrFactory<number> = () =>
+    this.chance.floating({ min: 0, max: 1_000 });
 
-  private encoded_polyline: PropOrFactory<string> = () => this.chance.string();
+  private _encoded_polyline: PropOrFactory<string> = () => this.chance.string();
 
   public static one() {
     return new RideFakeBuilder<Ride, RideJSON>();
@@ -63,57 +67,57 @@ export class RideFakeBuilder<T, TJSON> extends FakeBuilder<
   }
 
   public withCustomerId(valueOrFactory: PropOrFactory<CustomerId>): this {
-    this.customer_id = valueOrFactory;
+    this._customer_id = valueOrFactory;
     return this;
   }
 
   public withOrigin(valueOrFactory: PropOrFactory<Geolocation>): this {
-    this.origin = valueOrFactory;
+    this._origin = valueOrFactory;
     return this;
   }
 
   public withDestination(valueOrFactory: PropOrFactory<Geolocation>): this {
-    this.destination = valueOrFactory;
+    this._destination = valueOrFactory;
     return this;
   }
 
   public withDistance(valueOrFactory: PropOrFactory<number>): this {
-    this.distance = valueOrFactory;
+    this._distance = valueOrFactory;
     return this;
   }
 
   public withDuration(valueOrFactory: PropOrFactory<string>): this {
-    this.duration = valueOrFactory;
+    this._duration = valueOrFactory;
     return this;
   }
 
   public withDriverId(valueOrFactory: PropOrFactory<DriverId>): this {
-    this.driver_id = valueOrFactory;
+    this._driver_id = valueOrFactory;
     return this;
   }
 
   public withValue(valueOrFactory: PropOrFactory<number>): this {
-    this.value = valueOrFactory;
+    this._value = valueOrFactory;
     return this;
   }
 
   public withEncodedPolyline(valueOrFactory: PropOrFactory<string>): this {
-    this.encoded_polyline = valueOrFactory;
+    this._encoded_polyline = valueOrFactory;
     return this;
   }
 
   protected buildOne(index: number): Ride {
     const ride = new Ride({
       ride_id: this.callFactory(this._ride_id, index) as RideId,
-      customer_id: this.callFactory(this.customer_id, index) as CustomerId,
-      origin: this.callFactory(this.origin, index) as Geolocation,
-      destination: this.callFactory(this.destination, index) as Geolocation,
-      distance: this.callFactory(this.distance, index) as number,
-      duration: this.callFactory(this.duration, index) as string,
-      driver_id: this.callFactory(this.driver_id, index) as DriverId,
-      value: this.callFactory(this.value, index) as number,
+      customer_id: this.callFactory(this._customer_id, index) as CustomerId,
+      origin: this.callFactory(this._origin, index) as Geolocation,
+      destination: this.callFactory(this._destination, index) as Geolocation,
+      distance: this.callFactory(this._distance, index) as number,
+      duration: this.callFactory(this._duration, index) as string,
+      driver_id: this.callFactory(this._driver_id, index) as DriverId,
+      value: this.callFactory(this._value, index) as number,
       encoded_polyline: this.callFactory(
-        this.encoded_polyline,
+        this._encoded_polyline,
         index,
       ) as string,
     });

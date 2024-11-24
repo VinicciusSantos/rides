@@ -66,6 +66,14 @@ describe('RideAggregate Unit Tests', () => {
       expect(ride).toBeInstanceOf(Ride);
       expect(ride.toJSON()).toEqual({
         ride_id: expect.any(String),
+        customer_id: props.customer_id.id,
+        driver_id: props.driver_id.id,
+        origin: props.origin,
+        destination: props.destination,
+        distance: props.distance,
+        duration: props.duration,
+        value: props.value,
+        encoded_polyline: props.encoded_polyline,
       });
     });
   });

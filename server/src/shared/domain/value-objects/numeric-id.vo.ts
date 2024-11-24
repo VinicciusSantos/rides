@@ -1,10 +1,14 @@
 import { ValueObject } from './value-object';
 
 export class NumericId extends ValueObject {
-  public readonly id: number;
+  public readonly _id: number;
+
+  public get id(): number {
+    return this._id;
+  }
 
   constructor(id?: number) {
     super();
-    this.id = id || 0;
+    this._id = id || -1;
   }
 }

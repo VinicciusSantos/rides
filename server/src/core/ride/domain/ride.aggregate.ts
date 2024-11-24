@@ -98,10 +98,10 @@ export class Ride
 
   public toJSON(): RideJSON {
     return {
-      ride_id: this.ride_id.id,
-      customer_id: this.customer_id.id,
-      origin: this.origin,
-      destination: this.destination,
+      ride_id: this.ride_id.toString(),
+      customer_id: this.customer_id.toString(),
+      origin: this.origin.toJSON(),
+      destination: this.destination.toJSON(),
       distance: this.distance,
       duration: this.duration,
       driver_id: this.driver_id.id,
