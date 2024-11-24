@@ -31,7 +31,10 @@ export class DriverFakeBuilder<T, TJSON> extends FakeBuilder<
   private _rating?: PropOrFactory<number> = () =>
     this.chance.integer({ min: 0, max: 5 });
 
-  private _fee_by_km?: PropOrFactory<number> = this.chance.integer({ min: 1 });
+  private _fee_by_km?: PropOrFactory<number> = this.chance.integer({
+    min: 1,
+    max: 100,
+  });
 
   private _minimum_km?: PropOrFactory<number> = this.chance.integer({ min: 1 });
 
@@ -81,6 +84,22 @@ export class DriverFakeBuilder<T, TJSON> extends FakeBuilder<
 
   public withMinimumKm(valueOrFactory: PropOrFactory<number>): this {
     this._minimum_km = valueOrFactory;
+    return this;
+  }
+
+  public invalid(): this {
+    this._name = () => '';
+    this._description = () => this.chance.string({ length: 256 });
+    this._vehicle = () =>
+      new Vehicle({
+        model: '',
+        brand: '',
+        year: 0,
+        description: this.chance.string({ length: 256 }),
+      });
+    this._rating = () => -1;
+    this._fee_by_km = () => 0;
+    this._minimum_km = () => -1;
     return this;
   }
 

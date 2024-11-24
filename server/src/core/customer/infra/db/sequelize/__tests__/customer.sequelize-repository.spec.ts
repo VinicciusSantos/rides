@@ -197,4 +197,24 @@ describe('CustomerSequelizeRepository Unit Tests', () => {
       });
     });
   });
+
+  describe('update', () => {
+    it('should not be implemented', async () => {
+      const customer = Customer.fake.one().build();
+
+      await expect(customerRepo.update(customer)).rejects.toThrow(
+        new Error('Method not implemented.'),
+      );
+    });
+  });
+
+  describe('delete', () => {
+    it('should not be implemented', async () => {
+      const customer = Customer.fake.one().build();
+
+      await expect(customerRepo.delete(customer.customer_id)).rejects.toThrow(
+        new Error('Method not implemented.'),
+      );
+    });
+  });
 });

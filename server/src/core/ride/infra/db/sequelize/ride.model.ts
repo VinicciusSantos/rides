@@ -57,6 +57,7 @@ export class RideModel extends Model<RideModelProps> {
 }
 
 export interface RideEstimationModelProps {
+  id?: number;
   origin: GeolocationJSON;
   destination: GeolocationJSON;
   distance: number;

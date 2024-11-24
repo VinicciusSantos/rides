@@ -17,7 +17,7 @@ export class DriverSearchParams extends SearchParams<DriverFilter> {
     return new DriverSearchParams({
       ...props,
       page: props?.page ?? 1,
-      per_page: props?.paginate ? (props?.per_page ?? 15) : Infinity,
+      per_page: SearchParams.resolvePagination(props),
       sort: props?.sort ?? 'driver_id',
       sort_dir: props?.sort_dir ?? 'asc',
     });

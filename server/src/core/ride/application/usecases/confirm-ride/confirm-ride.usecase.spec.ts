@@ -119,8 +119,8 @@ describe('ConfirmRideUsecase', () => {
         customer_id: '123',
         origin: 'Invalid Origin',
         destination: 'Destination',
-        distance: 1000,
-        duration: '10 mins',
+        distance: 2000,
+        duration: '20 mins',
         driver: { id: 1, name: 'Driver' },
         value: 50,
       }),
@@ -128,13 +128,15 @@ describe('ConfirmRideUsecase', () => {
   });
 
   it('should confirm the ride successfully', async () => {
+    const distance = 1000;
+
     const estimatedRide = new RideEstimation({
       id: 1,
       origin: generateRandomLocation(),
       destination: generateRandomLocation(),
-      distance: 1000,
       duration: '10 mins',
       encoded_polyline: 'encoded-polyline',
+      distance,
     });
 
     const driver = Driver.fake.one().build();
@@ -142,8 +144,6 @@ describe('ConfirmRideUsecase', () => {
     customerRepoMock.findOne.mockResolvedValueOnce({ customer_id: '123' });
     driverRepoMock.findOne.mockResolvedValueOnce(driver);
     rideRepoMock.findEstimation.mockResolvedValueOnce(estimatedRide);
-
-    const distance = 1000;
 
     await usecase.execute({
       customer_id: '123',

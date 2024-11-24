@@ -14,7 +14,7 @@ export class DriverModelMapper {
       driver_id: new DriverId(rawData.driver_id),
       vehicle: new Vehicle({
         brand: rawData.vehicle.brand,
-        description: rawData.vehicle.description || undefined,
+        description: rawData.vehicle.description,
         model: rawData.vehicle.model,
         year: rawData.vehicle.year,
       }),

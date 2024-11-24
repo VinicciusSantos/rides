@@ -26,7 +26,10 @@ export class GoogleMapsService implements IMapsService {
 
     const [result] = response.results;
     if (!result) {
-      throw new InvalidDataError(ErrorType.INVALID_DATA, `No coordinates found for address: "${address}"`);
+      throw new InvalidDataError(
+        ErrorType.INVALID_DATA,
+        `No coordinates found for address: "${address}"`,
+      );
     }
 
     const { lat, lng } = result.geometry.location;
@@ -68,7 +71,10 @@ export class GoogleMapsService implements IMapsService {
     });
 
     if (!response.routes || !response.routes.length) {
-      throw new InvalidDataError(ErrorType.INVALID_DATA, `There are no routes available between the origin and destination`);
+      throw new InvalidDataError(
+        ErrorType.INVALID_DATA,
+        `There are no routes available between the origin and destination`,
+      );
     }
 
     return response.routes[0];

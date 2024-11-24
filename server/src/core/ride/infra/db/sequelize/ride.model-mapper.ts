@@ -37,7 +37,6 @@ export class RideModelMapper {
     ride.validate();
 
     if (ride.notification.hasErrors()) {
-      console.log("🚀 ~ RideModelMapper ~ toAggregate ~ ride:", ride)
       throw new InvalidDataError(
         ErrorType.ENTITY_VALIDATION,
         ride.notification.toString(),
@@ -67,13 +66,16 @@ export class RideEstimationModelMapper {
   public static toValueObject(model: RideEstimationModel): RideEstimation {
     const rawData = model.toJSON();
     return new RideEstimation({
+      id: rawData.id,
       origin: new Geolocation(
         rawData.origin.latitude,
         rawData.origin.longitude,
+        rawData.origin.address ?? undefined,
       ),
       destination: new Geolocation(
         rawData.destination.latitude,
         rawData.destination.longitude,
+        rawData.destination.address ?? undefined,
       ),
       distance: rawData.distance,
       duration: rawData.duration,
@@ -85,6 +87,7 @@ export class RideEstimationModelMapper {
   public static toModelProps(vo: RideEstimation): RideEstimationModelProps {
     const estimationInfos = vo.toJSON();
     return {
+      id: estimationInfos.id,
       origin: estimationInfos.origin.toJSON(),
       destination: estimationInfos.destination.toJSON(),
       distance: estimationInfos.distance,

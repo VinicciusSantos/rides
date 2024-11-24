@@ -7,6 +7,7 @@ export default {
   coveragePathIgnorePatterns: [
     'shared',
     'migrations',
+    '.dto.ts',
     '.d.ts',
     '.module.ts',
     '.providers.ts',

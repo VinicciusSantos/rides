@@ -1,10 +1,27 @@
+import Chance from 'chance';
+
 import { DuplicatedEntityError } from '../../../../../../shared/domain/errors';
+import { Geolocation } from '../../../../../../shared/domain/value-objects';
 import { UnitOfWorkSequelize } from '../../../../../../shared/infra/db/sequelize';
 import { setupSequelize } from '../../../../../../shared/infra/testing';
-import { Ride, RideFilter, RideId, RideSearchParams } from '../../../../domain';
+import {
+  Ride,
+  RideEstimation,
+  RideFilter,
+  RideId,
+  RideSearchParams,
+} from '../../../../domain';
 import { RideEstimationModel, RideModel } from '../ride.model';
-import { RideModelMapper } from '../ride.model-mapper';
+import {
+  RideEstimationModelMapper,
+  RideModelMapper,
+} from '../ride.model-mapper';
 import { RideSequelizeRepository } from '../ride.sequelize-repository';
+
+const chance = new Chance();
+
+const generateRandomLocation = (): Geolocation =>
+  new Geolocation(chance.latitude(), chance.longitude(), chance.address());
 
 describe('RideSequelizeRepository Unit Tests', () => {
   const sequelizeHelper = setupSequelize({
@@ -174,8 +191,6 @@ describe('RideSequelizeRepository Unit Tests', () => {
           expect(result.items[0].toJSON()).toEqual(rides[1].toJSON());
         });
       });
-
-      // TODO - add a describe block for each field
     });
 
     describe('transaction mode', () => {
@@ -189,6 +204,189 @@ describe('RideSequelizeRepository Unit Tests', () => {
 
         expect(result.items).toHaveLength(3);
       });
+    });
+  });
+
+  describe('update', () => {
+    it('should not be implemented', async () => {
+      const ride = Ride.fake.one().build();
+
+      await expect(rideRepo.update(ride)).rejects.toThrow(
+        new Error('Method not implemented.'),
+      );
+    });
+  });
+
+  describe('delete', () => {
+    it('should not be implemented', async () => {
+      const ride = Ride.fake.one().build();
+
+      await expect(rideRepo.delete(ride.ride_id)).rejects.toThrow(
+        new Error('Method not implemented.'),
+      );
+    });
+  });
+
+  describe('registerEstimation', () => {
+    it('should insert a ride estimation', async () => {
+      const rideEstimation = new RideEstimation({
+        origin: generateRandomLocation(),
+        destination: generateRandomLocation(),
+        distance: 1000,
+        duration: '10 mins',
+        encoded_polyline: 'encoded-polyline',
+      });
+
+      await rideRepo.registerEstimation(rideEstimation);
+
+      const [result] = await RideEstimationModel.findAll();
+
+      expect(result).toBeDefined();
+      expect(result.toJSON()).toEqual(
+        expect.objectContaining(rideEstimation.toJSON()),
+      );
+    });
+
+    describe('transaction mode', () => {
+      it('should insert a ride in a transaction', async () => {
+        const rideEstimation = new RideEstimation({
+          origin: generateRandomLocation(),
+          destination: generateRandomLocation(),
+          distance: 1000,
+          duration: '10 mins',
+          encoded_polyline: 'encoded-polyline',
+        });
+
+        await uow.start();
+        await rideRepo.registerEstimation(rideEstimation);
+        await uow.commit();
+
+        const [result] = await RideEstimationModel.findAll();
+
+        expect(result).toBeDefined();
+        expect(result.toJSON()).toEqual(
+          expect.objectContaining(rideEstimation.toJSON()),
+        );
+      });
+
+      it('should rollback the transaction', async () => {
+        const rideEstimation = new RideEstimation({
+          origin: generateRandomLocation(),
+          destination: generateRandomLocation(),
+          distance: 1000,
+          duration: '10 mins',
+          encoded_polyline: 'encoded-polyline',
+        });
+
+        await uow.start();
+        await rideRepo.registerEstimation(rideEstimation);
+        await uow.rollback();
+
+        const [result] = await RideEstimationModel.findAll();
+
+        expect(result).toBeUndefined();
+      });
+    });
+  });
+
+  describe('removeEstimation', () => {
+    it('should throw error on delete when a entity not found', async () => {
+      const estimationId = chance.integer({ min: 1, max: 1000 });
+      await expect(rideRepo.removeEstimation(estimationId)).rejects.toThrow();
+    });
+
+    it('should delete a entity', async () => {
+      const estimation = new RideEstimation({
+        origin: generateRandomLocation(),
+        destination: generateRandomLocation(),
+        distance: 1000,
+        duration: '10 mins',
+        encoded_polyline: 'encoded-polyline',
+      });
+      await rideRepo.registerEstimation(estimation);
+
+      const [storedEstimation] = await RideEstimationModel.findAll();
+      await rideRepo.removeEstimation(storedEstimation.id);
+      const [estimationFound] = await RideEstimationModel.findAll();
+      expect(estimationFound).toBeUndefined();
+    });
+
+    describe('transaction mode', () => {
+      it('should delete a Estimation', async () => {
+        const estimation = new RideEstimation({
+          origin: generateRandomLocation(),
+          destination: generateRandomLocation(),
+          distance: 1000,
+          duration: '10 mins',
+          encoded_polyline: 'encoded-polyline',
+        });
+        await rideRepo.registerEstimation(estimation);
+
+        const [storedEstimation] = await RideEstimationModel.findAll();
+        await uow.start();
+        await rideRepo.removeEstimation(storedEstimation.id);
+        await uow.commit();
+
+        const [estimationFound] = await RideEstimationModel.findAll();
+        expect(estimationFound).toBeUndefined();
+      });
+
+      it('rollback the deletion', async () => {
+        const estimation = new RideEstimation({
+          origin: generateRandomLocation(),
+          destination: generateRandomLocation(),
+          distance: 1000,
+          duration: '10 mins',
+          encoded_polyline: 'encoded-polyline',
+        });
+        await rideRepo.registerEstimation(estimation);
+
+        const [storedEstimation] = await RideEstimationModel.findAll();
+        await uow.start();
+        await rideRepo.removeEstimation(storedEstimation.id);
+        await uow.rollback();
+
+        const [estimationFound] = await RideEstimationModel.findAll();
+        expect(estimationFound.toJSON()).toEqual(storedEstimation.toJSON());
+      });
+    });
+  });
+
+  describe('findEstimation', () => {
+    it('should return a mapped ride estimation', async () => {
+      const estimation = new RideEstimation({
+        id: 1,
+        origin: generateRandomLocation(),
+        destination: generateRandomLocation(),
+        distance: 2.5,
+        duration: '5 mins',
+        encoded_polyline: 'mocked-polyline',
+        created_at: new Date(),
+      });
+
+      await RideEstimationModel.create({
+        ...RideEstimationModelMapper.toModelProps(estimation),
+      });
+
+      const result = await rideRepo.findEstimation(
+        estimation.origin.address!,
+        estimation.destination.address!,
+      );
+
+      expect(result).toBeDefined();
+      expect(result?.toJSON()).toEqual({
+        ...estimation.toJSON(),
+        created_at: estimation.created_at,
+      });
+    });
+
+    it('should return null if no estimation is found', async () => {
+      const result = await rideRepo.findEstimation(
+        chance.address(),
+        chance.address(),
+      );
+
+      expect(result).toBeNull();
     });
   });
 });

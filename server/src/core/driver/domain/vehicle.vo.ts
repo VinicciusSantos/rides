@@ -4,14 +4,14 @@ export interface VehicleConstructorProps {
   model: string;
   brand: string;
   year: number;
-  description?: string;
+  description: string;
 }
 
 export interface VehicleJSON {
   model: string;
   brand: string;
   year: number;
-  description: string | null;
+  description: string;
   formatted_name: string;
 }
 
@@ -42,7 +42,7 @@ export class Vehicle extends ValueObject {
     this._model = props.model;
     this._brand = props.brand;
     this._year = props.year;
-    this._description = props.description || '';
+    this._description = props.description;
   }
 
   public toJSON(): VehicleJSON {

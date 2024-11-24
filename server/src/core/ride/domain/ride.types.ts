@@ -1,5 +1,9 @@
 import { EntityJSON } from '../../../shared/domain';
-import { Geolocation, GeolocationJSON, Uuid } from '../../../shared/domain/value-objects';
+import {
+  Geolocation,
+  GeolocationJSON,
+  Uuid,
+} from '../../../shared/domain/value-objects';
 import { CustomerId } from '../../customer/domain';
 import { DriverId } from '../../driver/domain';
 

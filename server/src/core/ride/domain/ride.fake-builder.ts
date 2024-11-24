@@ -106,6 +106,20 @@ export class RideFakeBuilder<T, TJSON> extends FakeBuilder<
     return this;
   }
 
+  public invalid(): this {
+    this._origin = () =>
+      new Geolocation(this.chance.latitude(), this.chance.longitude(), '');
+    this._destination = () =>
+      new Geolocation(this.chance.latitude(), this.chance.longitude(), '');
+    this._distance = () => -1;
+    this._duration = () => '';
+    this._driver_id = () => new DriverId(-1);
+    this._value = () => -1;
+    this._encoded_polyline = () => '';
+
+    return this;
+  }
+
   protected buildOne(index: number): Ride {
     const ride = new Ride({
       ride_id: this.callFactory(this._ride_id, index) as RideId,

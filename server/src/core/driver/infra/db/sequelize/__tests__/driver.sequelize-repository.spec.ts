@@ -191,4 +191,24 @@ describe('DriverSequelizeRepository Unit Tests', () => {
       });
     });
   });
+
+  describe('update', () => {
+    it('should not be implemented', async () => {
+      const driver = Driver.fake.one().build();
+
+      await expect(driverRepo.update(driver)).rejects.toThrow(
+        new Error('Method not implemented.'),
+      );
+    });
+  });
+
+  describe('delete', () => {
+    it('should not be implemented', async () => {
+      const driver = Driver.fake.one().build();
+
+      await expect(driverRepo.delete(driver.driver_id)).rejects.toThrow(
+        new Error('Method not implemented.'),
+      );
+    });
+  });
 });

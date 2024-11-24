@@ -102,6 +102,12 @@ export class SearchParams<Filter = string> extends ValueObject {
     this.validateFilters(props.filter);
   }
 
+  public static resolvePagination(
+    props?: Partial<SearchParamsConstructorProps<unknown>>,
+  ): number {
+    return props?.paginate ? (props?.per_page ?? 15) : Infinity;
+  }
+
   private validateFilters(filters?: Filter | null): void {
     this._filter =
       isNull(filters) || isUndefined(filters) || isEmpty(filters)

@@ -18,7 +18,7 @@ export class RideSearchParams extends SearchParams<RideFilter> {
     return new RideSearchParams({
       ...props,
       page: props?.page ?? 1,
-      per_page: props?.paginate ? (props?.per_page ?? 15) : Infinity,
+      per_page: SearchParams.resolvePagination(props),
       sort: props?.sort ?? 'ride_id',
       sort_dir: props?.sort_dir ?? 'asc',
     });

@@ -1,4 +1,11 @@
-import { IMapsService } from '../../../../../shared/domain/services';
+import {
+  HttpRequestFailedError,
+  InvalidDataError,
+} from '../../../../../shared/domain/errors';
+import {
+  HTTPStatus,
+  IMapsService,
+} from '../../../../../shared/domain/services';
 import { IDriverRepository } from '../../../../driver/domain';
 import { IRideRepository, RideEstimation } from '../../../domain';
 import { EstimateRideUsecase } from './estimate-ride.usecase';
@@ -120,5 +127,38 @@ describe('EstimateRideUsecase', () => {
     expect(rideRepoMock.registerEstimation).toHaveBeenCalledWith(
       expect.any(RideEstimation),
     );
+  });
+
+  describe('getOriginAndDestination Error Handling', () => {
+    it('should throw InvalidDataError if requestFailedByInvalidData returns true', async () => {
+      const mockError = new HttpRequestFailedError(
+        'Invalid request',
+        HTTPStatus.BAD_REQUEST,
+      );
+
+      mapsServiceMock.getCoordinates.mockRejectedValueOnce(mockError);
+
+      await expect(
+        usecase['getOriginAndDestination']({
+          customer_id: '123',
+          origin: 'invalid-origin',
+          destination: 'valid-destination',
+        }),
+      ).rejects.toThrowError(InvalidDataError);
+    });
+
+    it('should rethrow the original error if requestFailedByInvalidData returns false', async () => {
+      const mockError = new Error('Unexpected error');
+
+      mapsServiceMock.getCoordinates.mockRejectedValueOnce(mockError);
+
+      await expect(
+        usecase['getOriginAndDestination']({
+          customer_id: '123',
+          origin: 'invalid-origin',
+          destination: 'valid-destination',
+        }),
+      ).rejects.toThrowError(mockError);
+    });
   });
 });

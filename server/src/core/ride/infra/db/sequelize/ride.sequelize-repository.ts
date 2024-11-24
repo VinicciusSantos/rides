@@ -1,4 +1,8 @@
-import { DuplicatedEntityError } from '../../../../../shared/domain/errors';
+import { Op, Sequelize } from 'sequelize';
+import {
+  DuplicatedEntityError,
+  NotFoundError,
+} from '../../../../../shared/domain/errors';
 import {
   OpBuilder,
   UnitOfWorkSequelize,
@@ -78,25 +82,37 @@ export class RideSequelizeRepository implements IRideRepository {
   }
 
   public async removeEstimation(estimation_id: number): Promise<void> {
-    await this.rideEstimationModel.destroy({
+    const affectedRows = await this.rideEstimationModel.destroy({
       where: { id: estimation_id },
       transaction: this.uow.getTransaction(),
     });
+
+    if (!affectedRows) {
+      throw new NotFoundError(estimation_id, Ride);
+    }
   }
 
   public async findEstimation(
     origin: string,
     destination: string,
   ): Promise<RideEstimation | null> {
-    const data = await this.rideEstimationModel.findOne({
-      where: { origin, destination },
+    const data = await RideEstimationModel.findOne({
+      where: {
+        [Op.and]: [
+          Sequelize.literal(`JSON_EXTRACT(origin, '$.address') = '${origin}'`),
+          Sequelize.literal(
+            `JSON_EXTRACT(destination, '$.address') = '${destination}'`,
+          ),
+        ],
+      },
       transaction: this.uow.getTransaction(),
     });
 
-    return data ? RideEstimationModelMapper.toValueObject(data) : null;
+    if (!data) return null;
+    return RideEstimationModelMapper.toValueObject(data);
   }
 
-  private async _search(props: RideSearchParams = RideSearchParams.create()) {
+  private async _search(props: RideSearchParams) {
     const { offset, filter, per_page } = props;
     const { ride_id, driver_id } = filter || {};
 

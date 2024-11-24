@@ -39,6 +39,11 @@ export class CustomerFakeBuilder<T, TJSON> extends FakeBuilder<
     return this;
   }
 
+  public invalid(): this {
+    this._name = () => '';
+    return this;
+  }
+
   protected buildOne(index: number): Customer {
     const customer = new Customer({
       customer_id: this.callFactory(this._customer_id, index) as CustomerId,

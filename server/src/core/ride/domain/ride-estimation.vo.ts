@@ -64,7 +64,7 @@ export class RideEstimation extends ValueObject {
     this._destination = props.destination;
     this._distance = props.distance;
     this._duration = props.duration;
-    this._encoded_polyline =  props.encoded_polyline  
+    this._encoded_polyline = props.encoded_polyline;
     this._created_at = props.created_at ?? new Date();
   }
 
@@ -76,7 +76,7 @@ export class RideEstimation extends ValueObject {
       distance: this.distance,
       duration: this.duration,
       encoded_polyline: this.encoded_polyline,
-      created_at: this._created_at,
+      created_at: this.created_at,
     };
   }
 }
