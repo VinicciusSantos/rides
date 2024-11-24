@@ -1,40 +1,55 @@
 services:
-  server:
+  client:
     build:
-      context: ./server
+      context: ./client
       dockerfile: Dockerfile
-    container_name: rides-server
+    container_name: rides-client
     ports:
-      - '8000:8000'
-    volumes:
-      - ./server:/app
-      - /app/node_modules
-    env_file:
-      - .env
+      - "80:3000"
     environment:
-      - DB_DATABASE=rides_db
-      - DB_USERNAME=rides_db_user
-      - DB_PASSWORD=password
-      - DB_DIALECT=postgres
-      - DB_HOST=db
-      - DB_LOGGING=false
-      - DB_PORT=5432
-    depends_on:
-      db:
-        condition: service_healthy
+      - NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=${GOOGLE_API_KEY}
+      - NEXT_PUBLIC_API_BASE_URL=server
 
-  db:
-    image: postgres:17
-    container_name: rides-db
-    restart: unless-stopped
-    environment:
-      POSTGRES_USER: rides_db_user
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: rides_db
-    healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U rides_db_user -d rides_db']
-      interval: 5s
-      timeout: 5s
-      retries: 10
-    ports:
-      - '5432:5432'
+  # server:
+  #   build:
+  #     context: ./server
+  #     dockerfile: Dockerfile
+  #   container_name: rides-server
+  #   ports:
+  #     - "8000:8000"
+  #   volumes:
+  #     - ./server:/app
+  #     - /app/node_modules
+  #   env_file:
+  #     - .env
+  #   environment:
+  #     - DB_DATABASE=${DB_DATABASE:-rides_db}
+  #     - DB_USERNAME=${DB_USERNAME:-rides_db_user}
+  #     - DB_PASSWORD=${DB_PASSWORD:-password}
+  #     - DB_DIALECT=${DB_DIALECT:-postgres}
+  #     - DB_HOST=${DB_HOST:-db}
+  #     - DB_LOGGING=${DB_LOGGING:-false}
+  #     - DB_PORT=${DB_PORT:-5432}
+  #   depends_on:
+  #     db:
+  #       condition: service_healthy
+
+  # db:
+  #   image: postgres:17
+  #   container_name: rides-db
+  #   restart: unless-stopped
+  #   environment:
+  #     POSTGRES_USER: ${DB_USERNAME:-rides_db_user}
+  #     POSTGRES_PASSWORD: ${DB_PASSWORD:-password}
+  #     POSTGRES_DB: ${DB_DATABASE:-rides_db}
+  #   healthcheck:
+  #     test:
+  #       [
+  #         "CMD-SHELL",
+  #         "pg_isready -U ${DB_USERNAME:-rides_db_user} -d ${DB_DATABASE:-rides_db}",
+  #       ]
+  #     interval: 5s
+  #     timeout: 5s
+  #     retries: 10
+  #   ports:
+  #     - "5432:5432"
