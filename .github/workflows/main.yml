@@ -1,0 +1,74 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-server:
+    runs-on: ubuntu-latest
+
+    env:
+      DB_DATABASE: ${{ secrets.DB_DATABASE }}
+      DB_USERNAME: ${{ secrets.DB_USERNAME }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      DB_DIALECT: ${{ secrets.DB_DIALECT }}
+      DB_HOST: ${{ secrets.DB_HOST }}
+      DB_LOGGING: ${{ secrets.DB_LOGGING }}
+      DB_PORT: ${{ secrets.DB_PORT }}
+      GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "21"
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: ./server
+
+      - name: Run linter
+        run: npm run lint
+        working-directory: ./server
+
+      - name: TypeScript compile check
+        run: npx tsc --noEmit
+        working-directory: ./server
+
+      - name: Run tests
+        run: npm run test
+        working-directory: ./server
+
+  build-client:
+    runs-on: ubuntu-latest
+
+    env:
+      NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+      NEXT_PUBLIC_API_BASE_URL: ${{ secrets.API_BASE_URL }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "21"
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: ./client
+
+      - name: Run linter
+        run: npm run lint
+        working-directory: ./client
+
+      - name: Run build
+        run: npm run build
+        working-directory: ./client
