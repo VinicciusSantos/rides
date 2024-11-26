@@ -3,9 +3,9 @@ import {
   OptionalFakeFields,
   PropOrFactory,
 } from '../../../shared/infra/testing';
-import { Vehicle } from './vehicle.vo';
 import { Driver } from './driver.aggregate';
 import { DriverId, DriverJSON } from './driver.types';
+import { Review, Vehicle } from './value-objects';
 
 export class DriverFakeBuilder<T, TJSON> extends FakeBuilder<
   Driver,
@@ -14,7 +14,7 @@ export class DriverFakeBuilder<T, TJSON> extends FakeBuilder<
   TJSON
 > {
   private _driver_id?: PropOrFactory<DriverId> = () =>
-    new DriverId(this.chance.integer({ min: 0 }));
+    new DriverId(this.chance.integer({ min: 0, max: 1000 }));
 
   private _name?: PropOrFactory<string> = () => this.chance.name();
 
@@ -28,8 +28,11 @@ export class DriverFakeBuilder<T, TJSON> extends FakeBuilder<
       description: this.chance.sentence(),
     });
 
-  private _rating?: PropOrFactory<number> = () =>
-    this.chance.integer({ min: 0, max: 5 });
+  private _review?: PropOrFactory<Review> = () =>
+    new Review({
+      rating: this.chance.integer({ min: 1, max: 5 }),
+      comment: this.chance.sentence(),
+    });
 
   private _fee_by_km?: PropOrFactory<number> = this.chance.integer({
     min: 1,
@@ -72,8 +75,8 @@ export class DriverFakeBuilder<T, TJSON> extends FakeBuilder<
     return this;
   }
 
-  public withRating(valueOrFactory: PropOrFactory<number>): this {
-    this._rating = valueOrFactory;
+  public withReview(valueOrFactory: PropOrFactory<Review>): this {
+    this._review = valueOrFactory;
     return this;
   }
 
@@ -97,7 +100,7 @@ export class DriverFakeBuilder<T, TJSON> extends FakeBuilder<
         year: 0,
         description: this.chance.string({ length: 256 }),
       });
-    this._rating = () => -1;
+    this._review = () => new Review({ rating: 10000, comment: '' });
     this._fee_by_km = () => 0;
     this._minimum_km = () => -1;
     return this;
@@ -109,7 +112,7 @@ export class DriverFakeBuilder<T, TJSON> extends FakeBuilder<
       name: this.callFactory(this._name, index) as string,
       description: this.callFactory(this._description, index) as string,
       vehicle: this.callFactory(this._vehicle, index) as Vehicle,
-      rating: this.callFactory(this._rating, index) as number,
+      review: this.callFactory(this._review, index) as Review,
       fee_by_km: this.callFactory(this._fee_by_km, index) as number,
       minimum_km: this.callFactory(this._minimum_km, index) as number,
     });

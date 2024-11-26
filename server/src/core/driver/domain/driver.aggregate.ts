@@ -1,5 +1,4 @@
 import { AggregateRoot } from '../../../shared/domain';
-import { Vehicle } from './vehicle.vo';
 import { DriverFakeBuilder } from './driver.fake-builder';
 import {
   DriverConstructorProps,
@@ -8,6 +7,7 @@ import {
   DriverJSON,
 } from './driver.types';
 import { DriverValidator } from './driver.validator';
+import { Review, Vehicle } from './value-objects';
 
 export class Driver
   extends AggregateRoot<DriverJSON, DriverId>
@@ -17,7 +17,7 @@ export class Driver
   private _name: string;
   private _description: string;
   private _vehicle: Vehicle;
-  private _rating: number;
+  private _review: Review;
   private _fee_by_km: number;
   private _minimum_km: number;
 
@@ -41,8 +41,8 @@ export class Driver
     return this._vehicle;
   }
 
-  public get rating(): number {
-    return this._rating;
+  public get review(): Review {
+    return this._review;
   }
 
   public get fee_by_km(): number {
@@ -73,7 +73,7 @@ export class Driver
     this._name = props.name;
     this._description = props.description;
     this._vehicle = props.vehicle;
-    this._rating = props.rating;
+    this._review = props.review;
     this._fee_by_km = props.fee_by_km;
     this._minimum_km = props.minimum_km;
   }
@@ -88,7 +88,7 @@ export class Driver
       name: this.name,
       description: this.description,
       vehicle: this.vehicle.toJSON(),
-      rating: this.rating,
+      review: this.review.toJSON(),
       fee_by_km: this.fee_by_km,
       minimum_km: this.minimum_km,
     };

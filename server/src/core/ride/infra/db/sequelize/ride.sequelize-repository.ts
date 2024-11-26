@@ -99,10 +99,8 @@ export class RideSequelizeRepository implements IRideRepository {
     const data = await RideEstimationModel.findOne({
       where: {
         [Op.and]: [
-          Sequelize.literal(`JSON_EXTRACT(origin, '$.address') = '${origin}'`),
-          Sequelize.literal(
-            `JSON_EXTRACT(destination, '$.address') = '${destination}'`,
-          ),
+          Sequelize.literal(`(origin->>'address') = '${origin}'`),
+          Sequelize.literal(`(destination->>'address') = '${destination}'`),
         ],
       },
       transaction: this.uow.getTransaction(),

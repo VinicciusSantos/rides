@@ -6,7 +6,8 @@ import {
   HTTPStatus,
   IMapsService,
 } from '../../../../../shared/domain/services';
-import { IDriverRepository } from '../../../../driver/domain';
+import { Driver, DriverId, IDriverRepository } from '../../../../driver/domain';
+import { Review, Vehicle } from '../../../../driver/domain/value-objects';
 import { IRideRepository, RideEstimation } from '../../../domain';
 import { EstimateRideUsecase } from './estimate-ride.usecase';
 
@@ -77,25 +78,28 @@ describe('EstimateRideUsecase', () => {
       polyline: { encodedPolyline: 'encoded-polyline' },
     };
 
-    const driversResMock = {
-      items: [
-        {
-          toJSON: jest.fn(() => ({
-            driver_id: 1,
-            name: 'John',
-            description: 'Experienced driver',
-            vehicle: { formatted_name: 'Car A' },
-            rating: 4.5,
-            fee_by_km: 5,
-          })),
-        },
-      ],
-    };
+    const driver = new Driver({
+      driver_id: new DriverId(1),
+      name: 'John',
+      description: 'Experienced driver',
+      vehicle: new Vehicle({
+        brand: 'Car A',
+        model: 'Model A',
+        year: 2020,
+        description: 'vehicle description',
+      }),
+      minimum_km: 5,
+      review: new Review({
+        rating: 4,
+        comment: 'TODO: Implement review system',
+      }),
+      fee_by_km: 5,
+    });
 
     mapsServiceMock.getCoordinates.mockResolvedValueOnce(originMock);
     mapsServiceMock.getCoordinates.mockResolvedValueOnce(destinationMock);
     mapsServiceMock.computeRoutesByCar.mockResolvedValue(computedRouteMock);
-    driverRepoMock.findAll.mockResolvedValue(driversResMock);
+    driverRepoMock.findAll.mockResolvedValue({ items: [driver] });
 
     const result = await usecase.execute({
       customer_id: '123',
@@ -103,22 +107,21 @@ describe('EstimateRideUsecase', () => {
       destination: 'B',
     });
 
+    const distance = computedRouteMock.distanceMeters;
+
     expect(result).toEqual({
       origin: { lat: 1, lng: 2 },
       destination: { lat: 3, lng: 4 },
-      distance: 10000,
-      duration: '15 mins',
+      distance,
+      duration: computedRouteMock.duration,
       options: [
         {
-          id: 1,
-          name: 'John',
-          description: 'Experienced driver',
-          vehicle: 'Car A',
-          review: {
-            rating: 4.5,
-            comment: 'TODO: Implement review system',
-          },
-          value: 50,
+          id: driver.driver_id.id,
+          name: driver.name,
+          description: driver.description,
+          vehicle: driver.vehicle.toJSON().formatted_name,
+          review: driver.review.toJSON(),
+          value: driver.fee_by_km * (distance / 1000),
         },
       ],
       routeResponse: computedRouteMock,

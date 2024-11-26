@@ -1,7 +1,10 @@
-import { Vehicle } from '../vehicle.vo';
+import { Review, Vehicle } from '../value-objects';
 import { Driver } from '../driver.aggregate';
 import { DriverFakeBuilder } from '../driver.fake-builder';
 import { DriverId } from '../driver.types';
+import Chance from 'chance';
+
+const chance = new Chance();
 
 describe('DriverFakeBuilder Unit Tests', () => {
   it('should create one driver', () => {
@@ -19,7 +22,10 @@ describe('DriverFakeBuilder Unit Tests', () => {
         description: expect.any(String),
         formatted_name: expect.any(String),
       },
-      rating: expect.any(Number),
+      review: {
+        rating: expect.any(Number),
+        comment: expect.any(String),
+      },
       fee_by_km: expect.any(Number),
       minimum_km: expect.any(Number),
     });
@@ -35,7 +41,7 @@ describe('DriverFakeBuilder Unit Tests', () => {
   });
 
   it('should create a lot of drivers with custom values', () => {
-    const count = 5;
+    const count = 3;
 
     const drivers = DriverFakeBuilder.aLot(count)
       .withDriverId((index) => new DriverId(index + 1))
@@ -50,7 +56,10 @@ describe('DriverFakeBuilder Unit Tests', () => {
             description: `Description ${index}`,
           }),
       )
-      .withRating((index) => index)
+      .withReview(
+        (index) =>
+          new Review({ rating: index + 1, comment: chance.sentence() }),
+      )
       .withFeeByKm((index) => index)
       .withMinimumKm((index) => index)
       .build();
@@ -69,7 +78,10 @@ describe('DriverFakeBuilder Unit Tests', () => {
           description: `Description ${index}`,
           formatted_name: expect.any(String),
         },
-        rating: index,
+        review: {
+          rating: index + 1,
+          comment: expect.any(String),
+        },
         fee_by_km: index,
         minimum_km: index,
       });

@@ -25,6 +25,17 @@ const vehicleSchema = z.object({
     .optional(),
 });
 
+const reviewSchema = z.object({
+  rating: z
+    .number({ message: 'Review rating should be a number' })
+    .int({ message: 'Review rating should be an integer' })
+    .min(1, { message: 'Review rating should be at least 1' })
+    .max(5, { message: 'Review rating should be at most 5' }),
+  comment: z
+    .string({ message: 'Review comment should be a string' })
+    .max(255, { message: 'Review comment must be at most 255 characters' }),
+});
+
 export class DriverValidator extends ClassValidatorFields {
   public schema = z.object({
     name: z
@@ -38,10 +49,7 @@ export class DriverValidator extends ClassValidatorFields {
         message: 'Driver description must be at most 255 characters',
       }),
     vehicle: vehicleSchema,
-    rating: z
-      .number({ message: 'Driver rating should be a number' })
-      .gte(0, { message: 'Driver rating should be a positive number' })
-      .max(5, { message: 'Driver rating should be at most 5' }),
+    review: reviewSchema,
     fee_by_km: z
       .number({ message: 'Driver fee by km should be a number' })
       .positive({ message: 'Driver fee by km should be a positive number' })

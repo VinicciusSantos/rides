@@ -99,10 +99,7 @@ export class EstimateRideUsecase
           name: driver.name,
           description: driver.description,
           vehicle: driver.vehicle.formatted_name,
-          review: {
-            rating: driver.rating,
-            comment: 'TODO: Implement review system',
-          },
+          review: driver.review,
           value:
             driver.fee_by_km * (computedRoute.distanceMeters / METERS_TO_KM),
         };
