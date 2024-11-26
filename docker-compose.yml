@@ -53,3 +53,37 @@ services:
       retries: 10
     ports:
       - "5432:5432"
+
+  keycloak:
+    container_name: rides-keycloak
+    image: quay.io/phasetwo/phasetwo-keycloak:latest
+    restart: always
+    depends_on:
+      - authdb
+    ports:
+      - "10000:10000"
+    command: -v start --import-realm --hostname ${KEYCLOAK_HOSTNAME:-localhost} --http-port=10000 --http-enabled=true
+    volumes:
+      - ./keycloak/imports:/opt/keycloak/data/import
+    env_file:
+      - ./keycloak/.env
+    environment:
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN:-admin}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin}
+      KC_DB: ${KC_DB:-postgres}
+      KC_DB_URL_HOST: ${KC_DB_URL_HOST:-authdb}
+      KC_DB_URL_PORT: ${KC_DB_URL_PORT:-5432}
+      KC_DB_URL_DATABASE: ${KC_DB_URL_DATABASE:-auth_rides_db}
+      KC_DB_USERNAME: ${KC_DB_USERNAME:-auth_rides_db_user}
+      KC_DB_PASSWORD: ${KC_DB_PASSWORD:-password}
+
+  authdb:
+    image: postgres:17
+    container_name: rides-auth-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${AUTH_DB_USERNAME:-auth_rides_db_user}
+      POSTGRES_PASSWORD: ${AUTH_DB_PASSWORD:-password}
+      POSTGRES_DB: ${AUTH_DB_DATABASE:-auth_rides_db}
+    ports:
+      - "5433:5432"
