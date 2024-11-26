@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 
+import { AuthModule } from './auth';
 import { CustomerModule } from './customer';
 import { DatabaseModule } from './database';
 import { DriverModule } from './driver';
@@ -11,6 +12,7 @@ import { SharedModule } from './shared';
   imports: [
     DatabaseModule,
     SharedModule,
+    AuthModule,
     CustomerModule,
     DriverModule,
     PingModule,

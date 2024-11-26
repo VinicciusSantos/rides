@@ -637,7 +637,7 @@
       "surrogateAuthRequired": false,
       "enabled": true,
       "alwaysDisplayInConsole": false,
-      "clientAuthenticatorType": "client-secret",
+      "clientAuthenticatorType": "none",
       "redirectUris": [],
       "webOrigins": [],
       "notBefore": 0,

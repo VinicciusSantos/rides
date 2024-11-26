@@ -8,6 +8,7 @@ import {
   Geolocation,
   GeolocationJSON,
 } from '../../../../../shared/domain/value-objects';
+import { DirectionsRoute } from '../../../../../shared/infra/services/google-maps/types';
 import { requestFailedByInvalidData } from '../../../../../shared/infra/utils/request-failed-by-invalid-data';
 import {
   DriverSearchParams,
@@ -39,7 +40,7 @@ export interface EstimateRideUsecaseOutput {
   routeResponse: unknown;
 }
 
-const originAndDestinationDifferError = new InvalidDataError(
+const equalOriginAndDestinationError = new InvalidDataError(
   ErrorType.INVALID_DATA,
   'Origin and destination must be different',
 );
@@ -57,16 +58,33 @@ export class EstimateRideUsecase
     input: EstimateRideUsecaseInput,
   ): Promise<EstimateRideUsecaseOutput> {
     if (input.origin === input.destination)
-      throw originAndDestinationDifferError;
+      throw equalOriginAndDestinationError;
 
-    const [origin, destination] = await this.getOriginAndDestination(input);
+    let origin, destination: Geolocation;
+    let computedRoute: DirectionsRoute;
 
-    if (origin.equals(destination)) throw originAndDestinationDifferError;
-
-    const computedRoute = await this.mapsService.computeRoutesByCar(
-      origin,
-      destination,
+    const previousEstimation = await this.rideRepo.findEstimation(
+      input.origin,
+      input.destination,
     );
+    if (previousEstimation) {
+      origin = previousEstimation.origin;
+      destination = previousEstimation.destination;
+      computedRoute = {
+        distanceMeters: previousEstimation.distance,
+        duration: previousEstimation.duration,
+        polyline: { encodedPolyline: previousEstimation.encoded_polyline },
+      };
+    } else {
+      [origin, destination] = await this.getOriginAndDestination(input);
+
+      if (origin.equals(destination)) throw equalOriginAndDestinationError;
+
+      computedRoute = await this.mapsService.computeRoutesByCar(
+        origin,
+        destination,
+      );
+    }
 
     const driversRes = await this.driverRepo.findAll(
       DriverSearchParams.create({
