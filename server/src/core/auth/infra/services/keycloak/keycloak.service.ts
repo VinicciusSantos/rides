@@ -9,6 +9,7 @@ import {
   LoginRequest,
   LoginResponse,
 } from '../../../domain/services';
+import { KEYCLOAK_CLIENT } from './constants';
 import { KeycloakClient, SecretResponse } from './keycloak.types';
 
 export class KeycloakService implements AuthService {
@@ -98,26 +99,21 @@ export class KeycloakService implements AuthService {
     const { api_url, realm } = Config.env.keycloak;
 
     await this.loadAdminToken();
+    await this.createClient(KEYCLOAK_CLIENT);
 
-    const clients = await this.httpService.get<KeycloakClient[]>({
-      url: `${api_url}/admin/realms/${realm}/clients`,
-      headers: { Authorization: `Bearer ${this.adminToken}` },
-    });
-
-    const ridesClient = clients.find((c) => c.clientId === 'rides-backend');
-    if (!ridesClient) throw new Error(`Client 'rides-client' not found`);
-    this._clientId = ridesClient.clientId;
+    this._clientId = KEYCLOAK_CLIENT.clientId;
 
     const secretResponse = await this.httpService.get<SecretResponse>({
-      url: `${api_url}/admin/realms/${realm}/clients/${ridesClient.id}/client-secret`,
+      url: `${api_url}/admin/realms/${realm}/clients/${KEYCLOAK_CLIENT.id}/client-secret`,
       headers: { Authorization: `Bearer ${this.adminToken}` },
     });
+
     this._clientSecret = secretResponse.value;
   }
-  
+
   private async loadAdminToken(): Promise<void> {
     const { api_url, realm, admin_username, admin_password } =
-    Config.env.keycloak;
+      Config.env.keycloak;
 
     const response = await this.httpService.post<LoginResponse>({
       url: `${api_url}/realms/${realm}/protocol/openid-connect/token`,
@@ -133,5 +129,32 @@ export class KeycloakService implements AuthService {
     this._adminToken = response.access_token;
 
     this.adminTokenExpiry = Date.now() + response.expires_in * 1000;
+  }
+
+  private async createClient(
+    clientConfig: Record<string, unknown>,
+  ): Promise<void> {
+    const { api_url, realm } = Config.env.keycloak;
+
+    const allClients = await this.httpService.get<KeycloakClient[]>({
+      url: `${api_url}/admin/realms/${realm}/clients`,
+      headers: { Authorization: `Bearer ${this.adminToken}` },
+    });
+    console.log('🚀 ~ KeycloakService ~ this.adminToken:', this.adminToken);
+
+    const targetClient = allClients.find(({ id }) => id === clientConfig.id);
+    if (targetClient) {
+      console.log(`Skipping client ${clientConfig.id} creation`);
+      return;
+    }
+    
+    await this.httpService.post({
+      url: `${api_url}/admin/realms/${realm}/clients`,
+      headers: {
+        Authorization: `Bearer ${this.adminToken}`,
+        'Content-Type': 'application/json',
+      },
+      data: clientConfig,
+    });
   }
 }
