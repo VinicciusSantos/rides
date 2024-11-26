@@ -1,6 +1,6 @@
 import { EntityJSON } from '../../../shared/domain';
 import { NumericId } from '../../../shared/domain/value-objects';
-import { Vehicle, VehicleJSON } from './vehicle.vo';
+import { Review, ReviewJSON, Vehicle, VehicleJSON } from './value-objects';
 
 export class DriverId extends NumericId {}
 
@@ -9,7 +9,7 @@ export interface DriverConstructorProps {
   name: string;
   description: string;
   vehicle: Vehicle;
-  rating: number;
+  review: Review;
   fee_by_km: number;
   minimum_km: number;
 }
@@ -18,7 +18,7 @@ export interface DriverCreateCommand {
   name: string;
   description: string;
   vehicle: Vehicle;
-  rating: number;
+  review: Review;
   fee_by_km: number;
   minimum_km: number;
 }
@@ -28,7 +28,7 @@ export type DriverJSON = EntityJSON<{
   name: string;
   description: string;
   vehicle: VehicleJSON;
-  rating: number;
+  review: ReviewJSON;
   fee_by_km: number;
   minimum_km: number;
 }>;

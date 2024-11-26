@@ -3,7 +3,7 @@ import {
   InvalidDataError,
 } from '../../../../../shared/domain/errors';
 import { Driver, DriverId } from '../../../domain';
-import { Vehicle } from '../../../domain/vehicle.vo';
+import { Review, Vehicle } from '../../../domain/value-objects';
 import { DriverModel, DriverModelProps } from './driver.model';
 
 export class DriverModelMapper {
@@ -20,7 +20,10 @@ export class DriverModelMapper {
       }),
       fee_by_km: Number(rawData.fee_by_km),
       minimum_km: Number(rawData.minimum_km),
-      rating: Number(rawData.rating),
+      review: new Review({
+        rating: rawData.review.rating,
+        comment: rawData.review.comment,
+      }),
     });
 
     driver.validate();
@@ -42,7 +45,10 @@ export class DriverModelMapper {
       name: driverInfos.name,
       description: driverInfos.description,
       vehicle: driverInfos.vehicle,
-      rating: driverInfos.rating,
+      review: {
+        rating: driverInfos.review.rating,
+        comment: driverInfos.review.comment,
+      },
       fee_by_km: driverInfos.fee_by_km,
       minimum_km: driverInfos.minimum_km,
     };

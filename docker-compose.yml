@@ -65,8 +65,6 @@ services:
     command: -v start --import-realm --hostname ${KEYCLOAK_HOSTNAME:-localhost} --http-port=10000 --http-enabled=true
     volumes:
       - ./keycloak/imports:/opt/keycloak/data/import
-    env_file:
-      - ./keycloak/.env
     environment:
       KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN:-admin}
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin}

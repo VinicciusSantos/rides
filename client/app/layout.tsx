@@ -1,6 +1,6 @@
 "use client";
 
-import "../globals.css";
+import "./globals.css";
 
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/toaster";
@@ -12,12 +12,12 @@ import { Provider as ReduxProvider } from "react-redux";
 const googleImportedLibraries: Libraries = ["places"];
 
 const geistSans = localFont({
-  src: "../fonts/GeistVF.woff",
+  src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
   weight: "100 900",
 });
 const geistMono = localFont({
-  src: "../fonts/GeistMonoVF.woff",
+  src: "./fonts/GeistMonoVF.woff",
   variable: "--font-geist-mono",
   weight: "100 900",
 });

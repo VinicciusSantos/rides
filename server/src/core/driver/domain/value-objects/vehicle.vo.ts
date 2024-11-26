@@ -1,4 +1,4 @@
-import { ValueObject } from '../../../shared/domain/value-objects';
+import { ValueObject } from '../../../../shared/domain/value-objects';
 
 export interface VehicleConstructorProps {
   model: string;

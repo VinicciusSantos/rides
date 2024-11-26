@@ -1,4 +1,4 @@
-import { Vehicle } from '../vehicle.vo';
+import { Review, Vehicle } from '../value-objects';
 import { Driver } from '../driver.aggregate';
 import {
   DriverConstructorProps,
@@ -20,7 +20,10 @@ describe('DriverAggregate Unit Tests', () => {
           year: 1973,
           description: 'rosa e enferrujado',
         }),
-        rating: 2,
+        review: new Review({
+          rating: 5,
+          comment: 'O melhor motorista de todos!',
+        }),
         fee_by_km: 2.5,
         minimum_km: 1,
       };
@@ -34,7 +37,7 @@ describe('DriverAggregate Unit Tests', () => {
         name: driver.name,
         description: driver.description,
         vehicle: driver.vehicle.toJSON(),
-        rating: driver.rating,
+        review: driver.review.toJSON(),
         fee_by_km: driver.fee_by_km,
         minimum_km: driver.minimum_km,
       });
@@ -53,7 +56,10 @@ describe('DriverAggregate Unit Tests', () => {
           year: 1973,
           description: 'rosa e enferrujado',
         }),
-        rating: 2,
+        review: new Review({
+          rating: 2,
+          comment: 'Mais ou menos...',
+        }),
         fee_by_km: 2.5,
         minimum_km: 1,
       };
@@ -67,7 +73,7 @@ describe('DriverAggregate Unit Tests', () => {
         name: driver.name,
         description: driver.description,
         vehicle: driver.vehicle.toJSON(),
-        rating: driver.rating,
+        review: driver.review.toJSON(),
         fee_by_km: driver.fee_by_km,
         minimum_km: driver.minimum_km,
       });
@@ -104,20 +110,6 @@ describe('DriverAggregate Unit Tests', () => {
         getDriver: () =>
           Driver.fake.one().withDescription('a'.repeat(256)).build(),
         message: 'Driver description must be at most 255 characters',
-      },
-      // Driver's rating
-      {
-        // @ts-expect-error - Intentionally passing invalid value to test validation
-        getDriver: () => Driver.fake.one().withRating(null).build(),
-        message: 'Driver rating should be a number',
-      },
-      {
-        getDriver: () => Driver.fake.one().withRating(-1).build(),
-        message: 'Driver rating should be a positive number',
-      },
-      {
-        getDriver: () => Driver.fake.one().withRating(6).build(),
-        message: 'Driver rating should be at most 5',
       },
       // Driver's fee by km
       {

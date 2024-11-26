@@ -1,4 +1,5 @@
-import { Driver, DriverId, Vehicle } from './core/driver/domain';
+import { Driver, DriverId } from './core/driver/domain';
+import { Review, Vehicle } from './core/driver/domain/value-objects';
 import {
   DriverModel,
   DriverModelMapper,
@@ -34,7 +35,11 @@ async function seed() {
           }),
           fee_by_km: 2.5,
           minimum_km: 1,
-          rating: 2,
+          review: new Review({
+            rating: 2,
+            comment:
+              'Motorista simpático, mas errou o caminho 3 vezes. O carro cheira a donuts.',
+          }),
         }),
         new Driver({
           driver_id: new DriverId(2),
@@ -49,7 +54,11 @@ async function seed() {
           }),
           fee_by_km: 5,
           minimum_km: 5,
-          rating: 4,
+          review: new Review({
+            rating: 4,
+            comment:
+              'Que viagem incrível! O carro é um show à parte e o motorista, apesar de ter uma cara de poucos amigos, foi super gente boa. Recomendo!',
+          }),
         }),
         new Driver({
           driver_id: new DriverId(3),
@@ -64,7 +73,11 @@ async function seed() {
           }),
           fee_by_km: 10,
           minimum_km: 10,
-          rating: 5,
+          review: new Review({
+            rating: 4,
+            comment:
+              'Serviço impecável! O motorista é a própria definição de classe e o carro é simplesmente magnífico. Uma experiência digna de um agente secreto.',
+          }),
         }),
       ].map(DriverModelMapper.toModelProps),
       { ignoreDuplicates: true },
