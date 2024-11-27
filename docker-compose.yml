@@ -7,8 +7,8 @@ services:
     ports:
       - "80:3000"
     environment:
-      - NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=${GOOGLE_API_KEY}
-      - NEXT_PUBLIC_API_BASE_URL=server:8000
+      NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: ${GOOGLE_API_KEY}
+      NEXT_PUBLIC_API_BASE_URL: server:8000
 
   server:
     build:
@@ -23,17 +23,17 @@ services:
     env_file:
       - .env
     environment:
-      - DB_DATABASE=${DB_DATABASE:-rides_db}
-      - DB_USERNAME=${DB_USERNAME:-rides_db_user}
-      - DB_PASSWORD=${DB_PASSWORD:-password}
-      - DB_DIALECT=${DB_DIALECT:-postgres}
-      - DB_HOST=${DB_HOST:-db}
-      - DB_LOGGING=${DB_LOGGING:-false}
-      - DB_PORT=${DB_PORT:-5432}
-      - KEYCLOAK_API_URL=${KEYCLOAK_API_URL:-http://keycloak:10000}
-      - KEYCLOAK_REALM=${KEYCLOAK_REALM:-master}
-      - KEYCLOAK_ADMIN_USERNAME=${KEYCLOAK_ADMIN_USERNAME:-admin}
-      - KEYCLOAK_ADMIN_PASSWORD=${KEYCLOAK_ADMIN_PASSWORD:-admin}
+      DB_DATABASE: ${DB_DATABASE:-rides_db}
+      DB_USERNAME: ${DB_USERNAME:-rides_db_user}
+      DB_PASSWORD: ${DB_PASSWORD:-password}
+      DB_DIALECT: ${DB_DIALECT:-postgres}
+      DB_HOST: ${DB_HOST:-db}
+      DB_LOGGING: ${DB_LOGGING:-false}
+      DB_PORT: ${DB_PORT:-5432}
+      KEYCLOAK_API_URL: ${KEYCLOAK_API_URL:-http://keycloak:10000}
+      KEYCLOAK_REALM: ${KEYCLOAK_REALM:-master}
+      KEYCLOAK_ADMIN_USERNAME: ${KEYCLOAK_ADMIN_USERNAME:-admin}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin}
     depends_on:
       db:
         condition: service_healthy
@@ -83,9 +83,9 @@ services:
       KC_HEALTH_ENABLED: true
     healthcheck:
       test: ["CMD-SHELL", "exec 3<>/dev/tcp/127.0.0.1/9000;echo -e 'GET /health/ready HTTP/1.1\r\nhost: http://localhost\r\nConnection: close\r\n\r\n' >&3;if [ $? -eq 0 ]; then echo 'Healthcheck Successful';exit 0;else echo 'Healthcheck Failed';exit 1;fi;"]
-      interval: 5s
-      timeout: 10s
-      retries: 10
+      interval: 7s
+      timeout: 12s
+      retries: 20
 
   authdb:
     image: postgres:17
