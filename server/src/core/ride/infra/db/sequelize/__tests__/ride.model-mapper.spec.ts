@@ -15,15 +15,15 @@ describe('RideModelMapper Unit Tests', () => {
 
   it('should convert Ride to RideModel and vice versa', () => {
     const originalEntity = RideFakeBuilder.one().build();
-    
+
     const modelProps = RideModelMapper.toModelProps(originalEntity);
     const model = RideModel.build(modelProps);
-    
+
     const entity = RideModelMapper.toEntity(model);
-    
+
     expect(entity.toJSON()).toEqual({
       ...originalEntity.toJSON(),
-      driver: null
+      driver: null,
     });
   });
 });
