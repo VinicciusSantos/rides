@@ -19,14 +19,17 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { RidesResponse } from "@/services/ride.service";
+import { getUser } from "@/services/auth.service";
 
 export default function RidesTable({ rides }: { rides: RidesResponse }) {
   const router = useRouter();
+  const user = getUser();
   const [currentPage, setCurrentPage] = useState(rides.current_page);
 
   const handlePageChange = (page: number) => {
+    if (page < 1 || page > rides.last_page) return;
     setCurrentPage(page);
-    router.push(`/rides?page=${page}&per_page=${rides.per_page}`);
+    router.push(`/rides/${user?.sub}?page=${page}&per_page=${rides.per_page}`);
   };
 
   return (

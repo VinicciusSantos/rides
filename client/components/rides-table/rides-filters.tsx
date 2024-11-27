@@ -22,6 +22,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Driver } from "@/services/driver.service";
+import { getUser } from "@/services/auth.service";
 
 const filterFormSchema = z.object({
   userId: z.string().optional(),
@@ -36,11 +37,12 @@ interface FilterFormProps {
 
 export default function FilterForm({ drivers }: FilterFormProps) {
   const router = useRouter();
+  const user = getUser();
 
   const form = useForm<FilterFormValues>({
     resolver: zodResolver(filterFormSchema),
     defaultValues: {
-      userId: "",
+      userId: user?.sub,
       driverId: "0",
     },
   });
@@ -64,7 +66,7 @@ export default function FilterForm({ drivers }: FilterFormProps) {
           control={form.control}
           name="userId"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="w-80">
               <FormLabel>User ID</FormLabel>
               <FormControl>
                 <Input placeholder="Enter user ID" {...field} />
@@ -78,11 +80,11 @@ export default function FilterForm({ drivers }: FilterFormProps) {
           control={form.control}
           name="driverId"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="w-80">
               <FormLabel>Driver</FormLabel>
               <FormControl>
                 <Select {...field}>
-                  <SelectTrigger className="w-[180px]">
+                  <SelectTrigger className="w-full">
                     <SelectValue placeholder="Select a driver" />
                   </SelectTrigger>
                   <SelectContent>
