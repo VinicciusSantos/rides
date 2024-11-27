@@ -81,7 +81,6 @@ export const logout = async () => {
 export const setAccessToken = (token: string) => {
   Cookies.set("access_token", token, {
     httpOnly: false,
-    secure: process.env.NODE_ENV === "production",
     sameSite: "strict",
     expires: 1 / 24,
   });
