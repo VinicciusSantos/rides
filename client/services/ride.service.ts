@@ -1,4 +1,5 @@
 import { fetcher } from "@/lib/fetcher";
+import { Driver } from "./driver.service";
 
 export interface EstimateRideRequest {
   customer_id: string;
@@ -69,6 +70,7 @@ export interface Ride {
   distance: number;
   duration: string;
   driver_id: number;
+  driver: Driver;
   value: number;
   encoded_polyline: string;
 }
@@ -103,5 +105,8 @@ export const fetchRides = async (
   data: { customer_id?: string; driver_id?: string } = {}
 ): Promise<RidesResponse> => {
   const params = new URLSearchParams(data as Record<string, string>).toString();
-  return fetcher<RidesResponse>(`/ride/all?${params}`, { method: "GET" });
+  return fetcher<RidesResponse>(`/ride/all?${params}`, {
+    method: "GET",
+    next: { tags: ["allRides"] },
+  });
 };

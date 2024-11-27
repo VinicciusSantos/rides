@@ -53,7 +53,7 @@ export default function FilterForm({ drivers }: FilterFormProps) {
     if (data.driverId && data.driverId !== "0")
       searchParams.append("driverId", data.driverId);
 
-    router.push(`/rides?${searchParams.toString()}`);
+    router.push(`/rides/${searchParams.toString()}`);
   };
 
   return (

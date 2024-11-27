@@ -17,6 +17,7 @@ import {
 } from "./dialogs";
 import { clearEstimate } from "@/store/slices/ride.slice";
 import { useRouter } from "next/navigation";
+import { revalidateCache } from "@/lib/revalidateTag";
 
 interface SelectDriverProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   driver: EstimatedDriver;
@@ -71,6 +72,7 @@ export const SelectDriver = ({
       });
 
       if (success) {
+        revalidateCache("allRides");
         dispatch(clearEstimate());
         toast({
           title: "Corrida Confirmada",

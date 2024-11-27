@@ -37,26 +37,22 @@ export default function RidesTable({ rides }: { rides: RidesResponse }) {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Ride ID</TableHead>
-            <TableHead>Customer ID</TableHead>
+            <TableHead>Driver name</TableHead>
             <TableHead>Origin</TableHead>
             <TableHead>Destination</TableHead>
             <TableHead>Distance (m)</TableHead>
             <TableHead>Duration</TableHead>
-            <TableHead>Driver ID</TableHead>
             <TableHead>Value</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {rides.items.map((ride) => (
             <TableRow key={ride.ride_id}>
-              <TableCell>{ride.ride_id}</TableCell>
-              <TableCell>{ride.customer_id}</TableCell>
+              <TableCell>{ride.driver.name}</TableCell>
               <TableCell>{ride.origin.address}</TableCell>
               <TableCell>{ride.destination.address}</TableCell>
-              <TableCell>{ride.distance}</TableCell>
+              <TableCell>{ride.distance}m</TableCell>
               <TableCell>{ride.duration}</TableCell>
-              <TableCell>{ride.driver_id}</TableCell>
               <TableCell>${ride.value.toFixed(2)}</TableCell>
             </TableRow>
           ))}

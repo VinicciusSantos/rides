@@ -23,20 +23,21 @@ export function Header() {
   const user = getUser();
 
   const mainNavigation: NavigationItem[] = [
+    { label: "Home", href: "/" },
+    { label: "Drivers", href: "/docs/components" },
+    { hide: !user, label: "Recent rides", href: `/rides/${user?.sub}` },
     {
       label: "API Docs",
       href: process.env.NEXT_PUBLIC_API_BASE_URL + "/docs",
       external: true,
     },
-    { label: "Drivers", href: "/docs/components" },
-    { hide: !user, label: "Recent rides", href: `/rides/${user?.sub}` },
   ];
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 dark:border-border flex justify-center">
       <div className="flex h-14 w-full max-w-screen-2xl items-center justify-between px-4">
         <div className="mr-4 hidden md:flex">
-          <div className="flex items-center gap-2 mr-4">
+          <div className="flex items-center gap-2 mr-8">
             <Logo />
             <Link href="/" className="hidden lg:flex items-center gap-2">
               <span className="font-bold text-primary">Rides</span>
