@@ -9,7 +9,11 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { ApiBadRequestResponse, ApiOkResponse, ApiQuery } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiOkResponse,
+  ApiQuery,
+} from '@nestjs/swagger';
 
 import {
   ConfirmRideUsecase,

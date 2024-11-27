@@ -8,6 +8,7 @@ interface SearchResultConstructorProps<E> {
   per_page: number;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export class SearchResult<E = any> extends ValueObject {
   public readonly items: E[];
   public readonly total: number;

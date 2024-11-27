@@ -1,4 +1,11 @@
-import { Column, DataType, HasMany, Model, PrimaryKey, Table } from 'sequelize-typescript';
+import {
+  Column,
+  DataType,
+  HasMany,
+  Model,
+  PrimaryKey,
+  Table,
+} from 'sequelize-typescript';
 
 import { RideModel } from '../../../../ride/infra/db/sequelize';
 import { ReviewJSON, VehicleJSON } from '../../../domain/value-objects';

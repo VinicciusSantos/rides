@@ -26,7 +26,7 @@ describe('GetRidesUsecase', () => {
       current_page: 1,
       per_page: 10,
     });
-    
+
     rideRepoMock.findAll.mockResolvedValueOnce(mockResult);
 
     await usecase.execute(input);

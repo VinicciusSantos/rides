@@ -1,8 +1,13 @@
 import { IUsecase } from '../../../../../shared/application';
 import { SearchResult } from '../../../../../shared/domain/repository';
-import { IDriverRepository, Driver, DriverSearchParams, DriverFilter } from '../../../domain';
+import {
+  IDriverRepository,
+  Driver,
+  DriverSearchParams,
+  DriverFilter,
+} from '../../../domain';
 
-export type GetDriversUsecaseInput = DriverFilter
+export type GetDriversUsecaseInput = DriverFilter;
 
 export type GetDriversUsecaseOutput = SearchResult<Driver>;
 
