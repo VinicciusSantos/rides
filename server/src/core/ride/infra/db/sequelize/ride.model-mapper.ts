@@ -33,7 +33,7 @@ export class RideModelMapper {
         rawData.destination.address ?? undefined,
       ),
       driver: rawData.driver
-        ? DriverModelMapper.toEntity(rawData.driver)
+        ? DriverModelMapper.toEntity(model.driver)
         : undefined,
     });
 

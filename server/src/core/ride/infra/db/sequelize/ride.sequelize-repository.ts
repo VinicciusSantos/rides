@@ -24,7 +24,7 @@ import {
 
 export class RideSequelizeRepository implements IRideRepository {
   public sortableFields: (keyof RideModelProps)[] = [];
-  public static relations: (keyof RideModelProps)[] = ['driver_id'];
+  public static relations: (keyof RideModelProps)[] = ['driver'];
 
   constructor(
     private rideModel: typeof RideModel,

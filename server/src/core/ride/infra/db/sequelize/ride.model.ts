@@ -2,6 +2,7 @@ import {
   BelongsTo,
   Column,
   DataType,
+  ForeignKey,
   Model,
   PrimaryKey,
   Table,
@@ -47,6 +48,7 @@ export class RideModel extends Model<RideModelProps> {
   @Column({ type: DataType.STRING })
   public declare duration: string;
 
+  @ForeignKey(() => DriverModel)
   @Column({ type: DataType.INTEGER })
   public declare driver_id: number;
 
@@ -59,7 +61,6 @@ export class RideModel extends Model<RideModelProps> {
   @BelongsTo(() => DriverModel, 'driver_id')
   public declare driver: DriverModel;
 }
-
 
 export interface RideEstimationModelProps {
   id?: number;
