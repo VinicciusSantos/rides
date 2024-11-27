@@ -87,7 +87,6 @@ export class RideEstimationModelMapper {
   public static toModelProps(vo: RideEstimation): RideEstimationModelProps {
     const estimationInfos = vo.toJSON();
     return {
-      id: estimationInfos.id,
       origin: estimationInfos.origin.toJSON(),
       destination: estimationInfos.destination.toJSON(),
       distance: estimationInfos.distance,

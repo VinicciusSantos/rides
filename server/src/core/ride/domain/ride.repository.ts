@@ -10,7 +10,8 @@ import { RideId } from './ride.types';
 
 export interface RideFilter {
   ride_id?: string;
-  driver_id?: string;
+  customer_id?: string;
+  driver_id?: number;
 }
 
 export class RideSearchParams extends SearchParams<RideFilter> {

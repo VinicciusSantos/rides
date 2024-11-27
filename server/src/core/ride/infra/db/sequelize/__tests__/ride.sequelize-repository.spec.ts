@@ -84,7 +84,6 @@ describe('RideSequelizeRepository Unit Tests', () => {
 
   describe('findOne', () => {
     it.each([
-      // TODO - add other fields
       {
         field: 'ride_id',
         build(ride: Ride) {
@@ -243,7 +242,10 @@ describe('RideSequelizeRepository Unit Tests', () => {
 
       expect(result).toBeDefined();
       expect(result.toJSON()).toEqual(
-        expect.objectContaining(rideEstimation.toJSON()),
+        expect.objectContaining({
+          ...rideEstimation.toJSON(),
+          id: expect.any(Number),
+        }),
       );
     });
 
@@ -265,7 +267,10 @@ describe('RideSequelizeRepository Unit Tests', () => {
 
         expect(result).toBeDefined();
         expect(result.toJSON()).toEqual(
-          expect.objectContaining(rideEstimation.toJSON()),
+          expect.objectContaining({
+            ...rideEstimation.toJSON(),
+            id: expect.any(Number),
+          }),
         );
       });
 

@@ -72,10 +72,10 @@ export class RideEstimationModel extends Model {
   public declare id: number;
 
   @Column({ type: DataType.JSON })
-  public declare origin: string;
+  public declare origin: GeolocationJSON;
 
   @Column({ type: DataType.JSON })
-  public declare destination: string;
+  public declare destination: GeolocationJSON;
 
   @Column({ type: DataType.FLOAT })
   public declare distance: number;

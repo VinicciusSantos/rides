@@ -5,6 +5,7 @@ import {
   ConfirmRideUsecase,
   EstimateRideUsecase,
   EstimateRideUsecaseOutput,
+  GetRidesUsecase,
 } from '../../core/ride/application/usecases';
 import { RideController } from './ride.controller';
 import { ConfirmRideDto, EstimateRideDto } from './dtos';
@@ -21,6 +22,7 @@ const RIDE_TESTING_MODULE: ModuleMetadata = {
   providers: [
     { provide: EstimateRideUsecase, useValue: { execute: jest.fn() } },
     { provide: ConfirmRideUsecase, useValue: { execute: jest.fn() } },
+    { provide: GetRidesUsecase, useValue: { execute: jest.fn() } },
   ],
 };
 
@@ -28,6 +30,7 @@ describe('RideController', () => {
   let rideController: RideController;
   let estimateRideUsecase: jest.Mocked<EstimateRideUsecase>;
   let confirmRideUsecase: jest.Mocked<ConfirmRideUsecase>;
+  let getRidesUsecase: jest.Mocked<GetRidesUsecase>;
 
   beforeEach(async () => {
     const module =
@@ -36,6 +39,7 @@ describe('RideController', () => {
     rideController = module.get<RideController>(RideController);
     estimateRideUsecase = module.get(EstimateRideUsecase);
     confirmRideUsecase = module.get(ConfirmRideUsecase);
+    getRidesUsecase = module.get(GetRidesUsecase);
   });
 
   it('should be defined', () => {
@@ -95,6 +99,19 @@ describe('RideController', () => {
         value: confirmDto.value,
       });
       expect(confirmRideUsecase.execute).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('getRides', () => {
+    it('should call getRidesUsecase with correct dto', async () => {
+      const customer_id = '1';
+
+      await rideController.getRides(customer_id);
+
+      expect(getRidesUsecase.execute).toHaveBeenCalledWith(
+        expect.objectContaining({ customer_id }),
+      );
+      expect(getRidesUsecase.execute).toHaveBeenCalledTimes(1);
     });
   });
 });
