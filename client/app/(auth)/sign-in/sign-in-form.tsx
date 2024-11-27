@@ -10,14 +10,16 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { signIn } from "@/services/auth.service";
-import { setUser } from "@/store/slices/user.slice";
+import {
+  setAccessToken,
+  setRefreshToken,
+  signIn,
+} from "@/services/auth.service";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader } from "lucide-react";
 import Link from "next/link";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
 import { z } from "zod";
 
 const signInSchema = z.object({
@@ -28,7 +30,7 @@ const signInSchema = z.object({
 type LoginFormInputs = z.infer<typeof signInSchema>;
 
 export function SignInForm() {
-  const dispatch = useDispatch();
+  const router = useRouter();
 
   const form = useForm<LoginFormInputs>({
     resolver: zodResolver(signInSchema),
@@ -39,15 +41,14 @@ export function SignInForm() {
   });
 
   const onSubmit = async (data: LoginFormInputs) => {
-    try {
-      const response = await signIn({
-        email_or_username: data.email,
-        password: data.password,
-      });
-      dispatch(setUser(response));
+    const response = await signIn({
+      email_or_username: data.email,
+      password: data.password,
+    });
+    setAccessToken(response.access_token);
+    setRefreshToken(response.refresh_token);
 
-      redirect("/");
-    } catch (error) {}
+    router.push("/");
   };
 
   return (
