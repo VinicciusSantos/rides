@@ -19,6 +19,10 @@ jobs:
       DB_LOGGING: ${{ secrets.DB_LOGGING }}
       DB_PORT: ${{ secrets.DB_PORT }}
       GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+      KEYCLOAK_API_URL: ${{ secrets.KEYCLOAK_API_URL }}
+      KEYCLOAK_REALM: ${{ secrets.KEYCLOAK_REALM }}
+      KEYCLOAK_ADMIN_USERNAME: ${{ secrets.KEYCLOAK_ADMIN_USERNAME }}
+      KEYCLOAK_ADMIN_PASSWORD: ${{ secrets.KEYCLOAK_ADMIN_PASSWORD }}
 
     steps:
       - name: Checkout repository
