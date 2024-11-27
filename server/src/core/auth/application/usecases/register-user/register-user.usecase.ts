@@ -1,9 +1,9 @@
 import { IUsecase } from '../../../../../shared/application';
-import { AuthService, AuthUser } from '../../../domain/services';
+import { AuthService, AuthUser, LoginResponse } from '../../../domain/services';
 
 export type RegisterUserInput = AuthUser;
 
-export type RegisterUserOutput = void;
+export type RegisterUserOutput = LoginResponse;
 
 export class RegisterUserUsecase
   implements IUsecase<RegisterUserInput, RegisterUserOutput>
@@ -11,6 +11,10 @@ export class RegisterUserUsecase
   constructor(private readonly authService: AuthService) {}
 
   public async execute(input: RegisterUserInput): Promise<RegisterUserOutput> {
-    return this.authService.register(input);
+    await this.authService.register(input);
+    return this.authService.login({
+      emailOrUsername: input.email,
+      password: input.password,
+    });
   }
 }

@@ -2,10 +2,10 @@ import { Chance } from 'chance';
 
 import { IUnitOfWork } from '../../../../../shared/domain/repository';
 import { Geolocation } from '../../../../../shared/domain/value-objects';
-import { ICustomerRepository } from '../../../../customer/domain';
 import { Driver, IDriverRepository } from '../../../../driver/domain';
 import { IRideRepository, Ride, RideEstimation } from '../../../domain';
 import { ConfirmRideUsecase } from './confirm-ride.usecase';
+import { CustomerId } from '../../../../customer/domain';
 
 const chance = Chance();
 
@@ -22,10 +22,6 @@ const rideRepoMock = {
   insert: jest.fn(),
 };
 
-const customerRepoMock = {
-  findOne: jest.fn(),
-};
-
 const driverRepoMock = {
   findOne: jest.fn(),
 };
@@ -37,31 +33,13 @@ describe('ConfirmRideUsecase', () => {
     usecase = new ConfirmRideUsecase(
       uowMock as unknown as IUnitOfWork,
       rideRepoMock as unknown as IRideRepository,
-      customerRepoMock as unknown as ICustomerRepository,
       driverRepoMock as unknown as IDriverRepository,
     );
 
     jest.clearAllMocks();
   });
 
-  it('should throw an error if customer is not found', async () => {
-    customerRepoMock.findOne.mockResolvedValueOnce(null);
-
-    await expect(
-      usecase.execute({
-        customer_id: '123',
-        origin: 'Origin',
-        destination: 'Destination',
-        distance: 1000,
-        duration: '10 mins',
-        driver: { id: 1, name: 'Driver' },
-        value: 50,
-      }),
-    ).rejects.toThrow('Customer with ID 123 not found');
-  });
-
   it('should throw an error if driver is not found', async () => {
-    customerRepoMock.findOne.mockResolvedValueOnce({ customer_id: '123' });
     driverRepoMock.findOne.mockResolvedValueOnce(null);
 
     await expect(
@@ -78,7 +56,6 @@ describe('ConfirmRideUsecase', () => {
   });
 
   it('should throw an error if ride estimation is not found', async () => {
-    customerRepoMock.findOne.mockResolvedValueOnce({ customer_id: '123' });
     driverRepoMock.findOne.mockResolvedValueOnce({ driver_id: 1 });
     rideRepoMock.findEstimation.mockResolvedValueOnce(null);
 
@@ -107,7 +84,6 @@ describe('ConfirmRideUsecase', () => {
       encoded_polyline: 'encoded-polyline',
     });
 
-    customerRepoMock.findOne.mockResolvedValueOnce({ customer_id: '123' });
     driverRepoMock.findOne.mockResolvedValueOnce({
       driver_id: 1,
       fee_by_km: 5,
@@ -141,12 +117,11 @@ describe('ConfirmRideUsecase', () => {
 
     const driver = Driver.fake.one().build();
 
-    customerRepoMock.findOne.mockResolvedValueOnce({ customer_id: '123' });
     driverRepoMock.findOne.mockResolvedValueOnce(driver);
     rideRepoMock.findEstimation.mockResolvedValueOnce(estimatedRide);
 
     await usecase.execute({
-      customer_id: '123',
+      customer_id: new CustomerId().toString(),
       origin: estimatedRide.origin.address!,
       destination: estimatedRide.destination.address!,
       duration: estimatedRide.duration,

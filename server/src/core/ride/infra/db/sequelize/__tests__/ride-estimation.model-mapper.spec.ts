@@ -22,6 +22,9 @@ describe('RideEstimationModelMapper Unit Tests', () => {
     const model = RideEstimationModel.build({ ...modelProps });
 
     const newVO = RideEstimationModelMapper.toValueObject(model);
-    expect(originalVO.toJSON()).toEqual(newVO.toJSON());
+    expect(newVO.toJSON()).toEqual({
+      ...originalVO.toJSON(),
+      id: expect.any(Number),
+    });
   });
 });

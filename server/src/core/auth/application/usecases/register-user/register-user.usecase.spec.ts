@@ -14,6 +14,7 @@ describe('RegisterUserUsecase', () => {
   beforeEach(() => {
     authService = {
       register: jest.fn(),
+      login: jest.fn(),
     } as unknown as jest.Mocked<AuthService>;
 
     usecase = new RegisterUserUsecase(authService);

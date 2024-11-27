@@ -5,7 +5,7 @@ import {
 } from '../../../../../shared/domain/errors';
 import { IUnitOfWork } from '../../../../../shared/domain/repository';
 import { Notification } from '../../../../../shared/domain/validators';
-import { Customer, ICustomerRepository } from '../../../../customer/domain';
+import { CustomerId } from '../../../../customer/domain';
 import { Driver, IDriverRepository } from '../../../../driver/domain';
 import { IRideRepository, Ride, RideEstimation } from '../../../domain';
 
@@ -32,14 +32,12 @@ export class ConfirmRideUsecase
   constructor(
     private readonly uow: IUnitOfWork,
     private readonly rideRepo: IRideRepository,
-    private readonly customerRepo: ICustomerRepository,
     private readonly driverRepo: IDriverRepository,
   ) {}
 
   public async execute(
     input: ConfirmRideUsecaseInput,
   ): Promise<ConfirmRideUsecaseOutput> {
-    const customer = await this.validateCustomer(input.customer_id);
     const driver = await this.validateDriver(input.driver.id);
 
     const estimatedRide = await this.rideRepo.findEstimation(
@@ -56,7 +54,7 @@ export class ConfirmRideUsecase
     this.validateRide(input, estimatedRide, driver);
 
     const newRide = Ride.create({
-      customer_id: customer.customer_id,
+      customer_id: new CustomerId(input.customer_id),
       driver_id: driver.driver_id,
       origin: estimatedRide.origin,
       destination: estimatedRide.destination,
@@ -72,17 +70,6 @@ export class ConfirmRideUsecase
         this.rideRepo.insert(newRide),
       ]);
     });
-  }
-
-  private async validateCustomer(customer_id: string): Promise<Customer> {
-    const customer = await this.customerRepo.findOne({ customer_id });
-    if (!customer) {
-      throw new InvalidDataError(
-        ErrorType.INVALID_DATA,
-        `Customer with ID ${customer_id} not found`,
-      );
-    }
-    return customer;
   }
 
   private async validateDriver(driver_id: number): Promise<Driver> {
