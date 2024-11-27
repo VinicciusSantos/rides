@@ -1,14 +1,18 @@
 import { IUsecase } from '../../../../../shared/application';
-import {
-  IRideRepository,
-  RideFilter,
-  RideSearchParams,
-  RideSearchResult,
-} from '../../../domain';
+import { SearchResult } from '../../../../../shared/domain/repository';
+import { GeolocationJSON } from '../../../../../shared/domain/value-objects';
+import { IRideRepository, RideFilter, RideSearchParams } from '../../../domain';
 
 export type GetRidesUsecaseInput = RideFilter;
 
-export type GetRidesUsecaseOutput = RideSearchResult;
+export type GetRidesUsecaseOutput = SearchResult<{
+  driver_name: string;
+  origin: GeolocationJSON;
+  destination: GeolocationJSON;
+  distance: number;
+  duration: number;
+  value: number;
+}>;
 
 export class GetRidesUsecase
   implements IUsecase<GetRidesUsecaseInput, GetRidesUsecaseOutput>

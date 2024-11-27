@@ -5,6 +5,7 @@ import {
 import { Geolocation } from '../../../../../shared/domain/value-objects';
 import { CustomerId } from '../../../../customer/domain';
 import { DriverId } from '../../../../driver/domain';
+import { DriverModelMapper } from '../../../../driver/infra/db/sequelize';
 import { Ride, RideEstimation, RideId } from '../../../domain';
 import {
   RideEstimationModel,
@@ -31,7 +32,9 @@ export class RideModelMapper {
         rawData.destination.longitude,
         rawData.destination.address ?? undefined,
       ),
-      value: rawData.value ?? undefined,
+      driver: rawData.driver
+        ? DriverModelMapper.toEntity(rawData.driver)
+        : undefined,
     });
 
     ride.validate();
