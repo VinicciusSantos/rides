@@ -1,18 +1,19 @@
 import { DuplicatedEntityError } from '../../../../../../shared/domain/errors';
 import { UnitOfWorkSequelize } from '../../../../../../shared/infra/db/sequelize';
 import { setupSequelize } from '../../../../../../shared/infra/testing';
+import { RideModel } from '../../../../../ride/infra/db/sequelize';
 import {
   Driver,
   DriverFilter,
   DriverId,
   DriverSearchParams,
 } from '../../../../domain';
-import { DriverSequelizeRepository } from '../driver.sequelize-repository';
 import { DriverModel } from '../driver.model';
 import { DriverModelMapper } from '../driver.model-mapper';
+import { DriverSequelizeRepository } from '../driver.sequelize-repository';
 
 describe('DriverSequelizeRepository Unit Tests', () => {
-  const sequelizeHelper = setupSequelize({ models: [DriverModel] });
+  const sequelizeHelper = setupSequelize({ models: [DriverModel, RideModel] });
 
   let uow: UnitOfWorkSequelize;
   let driverRepo: DriverSequelizeRepository;

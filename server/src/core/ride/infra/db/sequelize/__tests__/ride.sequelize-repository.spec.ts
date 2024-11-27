@@ -4,6 +4,11 @@ import { DuplicatedEntityError } from '../../../../../../shared/domain/errors';
 import { Geolocation } from '../../../../../../shared/domain/value-objects';
 import { UnitOfWorkSequelize } from '../../../../../../shared/infra/db/sequelize';
 import { setupSequelize } from '../../../../../../shared/infra/testing';
+import { Driver } from '../../../../../driver/domain';
+import {
+  DriverModel,
+  DriverModelMapper,
+} from '../../../../../driver/infra/db/sequelize';
 import {
   Ride,
   RideEstimation,
@@ -23,9 +28,18 @@ const chance = new Chance();
 const generateRandomLocation = (): Geolocation =>
   new Geolocation(chance.latitude(), chance.longitude(), chance.address());
 
+const createRelations = async (): Promise<{ driver: Driver }> => {
+  const driverRes = await DriverModel.create(
+    DriverModelMapper.toModelProps(Driver.fake.one().build()),
+  );
+  return {
+    driver: DriverModelMapper.toEntity(driverRes),
+  };
+};
+
 describe('RideSequelizeRepository Unit Tests', () => {
   const sequelizeHelper = setupSequelize({
-    models: [RideModel, RideEstimationModel],
+    models: [RideModel, RideEstimationModel, DriverModel],
   });
 
   let uow: UnitOfWorkSequelize;
@@ -38,7 +52,12 @@ describe('RideSequelizeRepository Unit Tests', () => {
 
   describe('insert', () => {
     it('should insert a ride', async () => {
-      const ride = Ride.fake.one().build();
+      const { driver } = await createRelations();
+      const ride = Ride.fake
+        .one()
+        .withDriver(driver)
+        .withDriverId(driver.driver_id)
+        .build();
 
       const rideJSON = ride.toJSON();
       await rideRepo.insert(ride);
@@ -53,7 +72,12 @@ describe('RideSequelizeRepository Unit Tests', () => {
 
     describe('transaction mode', () => {
       it('should insert a ride in a transaction', async () => {
-        const ride = Ride.fake.one().build();
+        const { driver } = await createRelations();
+        const ride = Ride.fake
+          .one()
+          .withDriver(driver)
+          .withDriverId(driver.driver_id)
+          .build();
 
         const rideJSON = ride.toJSON();
         await uow.start();
@@ -69,7 +93,12 @@ describe('RideSequelizeRepository Unit Tests', () => {
       });
 
       it('should rollback the transaction', async () => {
-        const ride = Ride.fake.one().build();
+        const { driver } = await createRelations();
+        const ride = Ride.fake
+          .one()
+          .withDriver(driver)
+          .withDriverId(driver.driver_id)
+          .build();
 
         await uow.start();
         await rideRepo.insert(ride);
@@ -91,7 +120,13 @@ describe('RideSequelizeRepository Unit Tests', () => {
         },
       },
     ])('should find a ride by $field', async ({ field, build }) => {
-      const ride = Ride.fake.one().build();
+      const { driver } = await createRelations();
+      const ride = Ride.fake
+        .one()
+        .withDriver(driver)
+        .withDriverId(driver.driver_id)
+        .build();
+
       await rideRepo.insert(ride);
 
       const result = await rideRepo.findOne({
@@ -131,7 +166,12 @@ describe('RideSequelizeRepository Unit Tests', () => {
 
     describe('transaction mode', () => {
       it('should find a ride by id in a transaction', async () => {
-        const ride = Ride.fake.one().build();
+        const { driver } = await createRelations();
+        const ride = Ride.fake
+          .one()
+          .withDriver(driver)
+          .withDriverId(driver.driver_id)
+          .build();
         await rideRepo.insert(ride);
 
         await uow.start();
@@ -157,7 +197,13 @@ describe('RideSequelizeRepository Unit Tests', () => {
 
   describe('findAll', () => {
     it('should find all rides', async () => {
-      const rides = Ride.fake.aLot(3).build();
+      const { driver } = await createRelations();
+      const rides = Ride.fake
+        .aLot(3)
+        .withDriver(driver)
+        .withDriverId(driver.driver_id)
+        .build();
+
       await Promise.all(rides.map((ride) => rideRepo.insert(ride)));
 
       const result = await rideRepo.findAll();
@@ -177,7 +223,13 @@ describe('RideSequelizeRepository Unit Tests', () => {
     describe('filters', () => {
       describe('ride_id', () => {
         it('should find rides by a single ride_id', async () => {
-          const rides = Ride.fake.aLot(3).build();
+          const { driver } = await createRelations();
+          const rides = Ride.fake
+            .aLot(3)
+            .withDriver(driver)
+            .withDriverId(driver.driver_id)
+            .build();
+
           await Promise.all(rides.map((ride) => rideRepo.insert(ride)));
 
           const result = await rideRepo.findAll(
@@ -194,7 +246,13 @@ describe('RideSequelizeRepository Unit Tests', () => {
 
     describe('transaction mode', () => {
       it('should find all rides in a transaction', async () => {
-        const rides = Ride.fake.aLot(3).build();
+        const { driver } = await createRelations();
+        const rides = Ride.fake
+          .aLot(3)
+          .withDriver(driver)
+          .withDriverId(driver.driver_id)
+          .build();
+
         await Promise.all(rides.map((ride) => rideRepo.insert(ride)));
 
         await uow.start();

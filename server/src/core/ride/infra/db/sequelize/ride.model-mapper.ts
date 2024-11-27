@@ -5,7 +5,10 @@ import {
 import { Geolocation } from '../../../../../shared/domain/value-objects';
 import { CustomerId } from '../../../../customer/domain';
 import { DriverId } from '../../../../driver/domain';
-import { DriverModelMapper } from '../../../../driver/infra/db/sequelize';
+import {
+  DriverModel,
+  DriverModelMapper,
+} from '../../../../driver/infra/db/sequelize';
 import { Ride, RideEstimation, RideId } from '../../../domain';
 import {
   RideEstimationModel,

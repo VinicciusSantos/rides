@@ -2,7 +2,7 @@ import { Chance } from 'chance';
 
 import { Geolocation } from '../../../../shared/domain/value-objects';
 import { CustomerId } from '../../../customer/domain';
-import { DriverId } from '../../../driver/domain';
+import { Driver, DriverId } from '../../../driver/domain';
 import { Ride } from '../ride.aggregate';
 import { RideConstructorProps, RideCreateCommand, RideId } from '../ride.types';
 
@@ -21,6 +21,7 @@ describe('RideAggregate Unit Tests', () => {
         ride_id: new RideId(),
         customer_id: new CustomerId(),
         driver_id: new DriverId(),
+        driver: Driver.fake.one().build(),
         origin: generateRandomLocation(),
         destination: generateRandomLocation(),
         distance: 1,
@@ -37,6 +38,7 @@ describe('RideAggregate Unit Tests', () => {
         ride_id: props.ride_id.id,
         customer_id: props.customer_id.id,
         driver_id: props.driver_id.id,
+        driver: props.driver!.toJSON(),
         origin: props.origin,
         destination: props.destination,
         distance: props.distance,
@@ -68,6 +70,7 @@ describe('RideAggregate Unit Tests', () => {
         ride_id: expect.any(String),
         customer_id: props.customer_id.id,
         driver_id: props.driver_id.id,
+        driver: null,
         origin: props.origin,
         destination: props.destination,
         distance: props.distance,

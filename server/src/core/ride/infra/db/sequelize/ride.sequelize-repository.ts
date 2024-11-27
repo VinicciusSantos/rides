@@ -33,10 +33,14 @@ export class RideSequelizeRepository implements IRideRepository {
   ) {}
 
   public async insert(aggregate: Ride): Promise<void> {
-    await this.rideModel.create(RideModelMapper.toModelProps(aggregate), {
-      include: RideSequelizeRepository.relations,
-      transaction: this.uow.getTransaction(),
-    });
+    try {
+      await this.rideModel.create(RideModelMapper.toModelProps(aggregate), {
+        include: RideSequelizeRepository.relations,
+        transaction: this.uow.getTransaction(),
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   public async findOne(filter: RideFilter): Promise<Ride | null> {
