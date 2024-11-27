@@ -2,15 +2,13 @@ import { EstimatedDriver } from "@/services/ride.service";
 import { Car, Info, Star } from "lucide-react";
 
 import { Card, CardContent } from "../ui/card";
-import { SelectDriverButton } from "./select-driver-button";
+import { SelectDriver } from "./select-driver";
 
 interface DriverCardProps {
   driver: EstimatedDriver;
-  onSelect: (driverId: number) => void;
-  loading: boolean;
 }
 
-export function DriverCard({ driver, onSelect, loading }: DriverCardProps) {
+export function DriverCard({ driver }: DriverCardProps) {
   return (
     <Card className="p-0">
       <CardContent className="flex flex-col space-y-4">
@@ -55,11 +53,7 @@ export function DriverCard({ driver, onSelect, loading }: DriverCardProps) {
           </div>
         )}
 
-        <SelectDriverButton
-          className="self-end"
-          loading={loading}
-          onClick={() => onSelect(driver.id)}
-        />
+        <SelectDriver className="self-end" driver={driver} />
       </CardContent>
     </Card>
   );
