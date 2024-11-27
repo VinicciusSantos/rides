@@ -47,13 +47,13 @@ export default function FilterForm({ drivers }: FilterFormProps) {
     },
   });
 
-  const handleSubmit = async (data: FilterFormValues) => {
+  const handleSubmit = (data: FilterFormValues) => {
     const searchParams = new URLSearchParams();
     if (data.userId) searchParams.append("userId", data.userId);
     if (data.driverId && data.driverId !== "0")
       searchParams.append("driverId", data.driverId);
 
-    router.push(`/rides/${searchParams.toString()}`);
+    router.push(`?${searchParams.toString()}`);
   };
 
   return (
@@ -83,7 +83,7 @@ export default function FilterForm({ drivers }: FilterFormProps) {
             <FormItem className="w-80">
               <FormLabel>Driver</FormLabel>
               <FormControl>
-                <Select {...field}>
+                <Select onValueChange={field.onChange} value={field.value}>
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Select a driver" />
                   </SelectTrigger>

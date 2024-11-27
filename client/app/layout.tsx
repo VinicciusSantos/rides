@@ -2,7 +2,7 @@
 
 import "./globals.css";
 
-import { ThemeProvider } from "@/components/theme-provider";
+import { ThemeProvider } from "@/components/theme/theme-provider";
 import { Toaster } from "@/components/ui/toaster";
 import { store } from "@/store";
 import { Libraries, LoadScript } from "@react-google-maps/api";

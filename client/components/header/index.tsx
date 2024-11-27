@@ -3,7 +3,7 @@
 import { getUser } from "@/services/auth.service";
 import Link from "next/link";
 import { Logo } from "../logo";
-import { ThemeToggle } from "../theme-toggle";
+import { ThemeToggle } from "../theme/theme-toggle";
 import { Button } from "../ui/button";
 import {
   NavigationMenu,
@@ -24,8 +24,7 @@ export function Header() {
 
   const mainNavigation: NavigationItem[] = [
     { label: "Home", href: "/" },
-    { label: "Drivers", href: "/docs/components" },
-    { hide: !user, label: "Recent rides", href: `/rides/${user?.sub}` },
+    { label: "Recent rides", href: `/rides#userId=${user?.sub}` },
     {
       label: "API Docs",
       href: process.env.NEXT_PUBLIC_API_BASE_URL + "/docs",
