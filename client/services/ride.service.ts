@@ -1,4 +1,5 @@
 import { fetcher } from "@/lib/fetcher";
+import { Driver } from "./driver.service";
 
 export interface EstimateRideRequest {
   customer_id: string;
@@ -53,6 +54,35 @@ export interface ConfirmRideResponse {
   success?: boolean;
 }
 
+export interface Ride {
+  ride_id: string;
+  customer_id: string;
+  origin: {
+    latitude: number;
+    longitude: number;
+    address: string;
+  };
+  destination: {
+    latitude: number;
+    longitude: number;
+    address: string;
+  };
+  distance: number;
+  duration: string;
+  driver_id: number;
+  driver: Driver;
+  value: number;
+  encoded_polyline: string;
+}
+
+export interface RidesResponse {
+  items: Ride[];
+  total: number;
+  current_page: number;
+  per_page: number;
+  last_page: number;
+}
+
 export const estimateRide = async (
   data: EstimateRideRequest
 ): Promise<EstimateRideResponse> =>
@@ -70,3 +100,13 @@ export const confirmRide = async (
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
   });
+
+export const fetchRides = async (
+  data: { customer_id?: string; driver_id?: string } = {}
+): Promise<RidesResponse> => {
+  const params = new URLSearchParams(data as Record<string, string>).toString();
+  return fetcher<RidesResponse>(`/ride/all?${params}`, {
+    method: "GET",
+    next: { tags: ["allRides"] },
+  });
+};

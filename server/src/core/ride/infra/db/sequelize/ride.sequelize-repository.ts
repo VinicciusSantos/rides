@@ -24,7 +24,7 @@ import {
 
 export class RideSequelizeRepository implements IRideRepository {
   public sortableFields: (keyof RideModelProps)[] = [];
-  public static relations: (keyof RideModelProps)[] = [];
+  public static relations: (keyof RideModelProps)[] = ['driver'];
 
   constructor(
     private rideModel: typeof RideModel,
@@ -33,10 +33,14 @@ export class RideSequelizeRepository implements IRideRepository {
   ) {}
 
   public async insert(aggregate: Ride): Promise<void> {
-    await this.rideModel.create(RideModelMapper.toModelProps(aggregate), {
-      include: RideSequelizeRepository.relations,
-      transaction: this.uow.getTransaction(),
-    });
+    try {
+      await this.rideModel.create(RideModelMapper.toModelProps(aggregate), {
+        include: RideSequelizeRepository.relations,
+        transaction: this.uow.getTransaction(),
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   public async findOne(filter: RideFilter): Promise<Ride | null> {
@@ -112,12 +116,13 @@ export class RideSequelizeRepository implements IRideRepository {
 
   private async _search(props: RideSearchParams) {
     const { offset, filter, per_page } = props;
-    const { ride_id, driver_id } = filter || {};
+    const { ride_id, driver_id, customer_id } = filter || {};
 
     const data = await this.rideModel.findAndCountAll({
       where: {
         ...OpBuilder.Exact('ride_id', ride_id),
         ...OpBuilder.Exact('driver_id', driver_id),
+        ...OpBuilder.Exact('customer_id', customer_id),
       },
       include: RideSequelizeRepository.relations,
       order: OpBuilder.Order(props),

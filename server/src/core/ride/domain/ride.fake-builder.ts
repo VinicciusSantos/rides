@@ -5,7 +5,7 @@ import {
   PropOrFactory,
 } from '../../../shared/infra/testing';
 import { CustomerId } from '../../customer/domain';
-import { DriverId } from '../../driver/domain';
+import { Driver, DriverId } from '../../driver/domain';
 import { Ride } from './ride.aggregate';
 import { RideId, RideJSON } from './ride.types';
 
@@ -48,6 +48,8 @@ export class RideFakeBuilder<T, TJSON> extends FakeBuilder<
     this.chance.floating({ min: 0, max: 1_000 });
 
   private _encoded_polyline: PropOrFactory<string> = () => this.chance.string();
+
+  private _driver: PropOrFactory<Driver> = () => Driver.fake.one().build();
 
   public static one() {
     return new RideFakeBuilder<Ride, RideJSON>();
@@ -96,6 +98,11 @@ export class RideFakeBuilder<T, TJSON> extends FakeBuilder<
     return this;
   }
 
+  public withDriver(valueOrFactory: PropOrFactory<Driver>): this {
+    this._driver = valueOrFactory;
+    return this;
+  }
+
   public withValue(valueOrFactory: PropOrFactory<number>): this {
     this._value = valueOrFactory;
     return this;
@@ -134,6 +141,7 @@ export class RideFakeBuilder<T, TJSON> extends FakeBuilder<
         this._encoded_polyline,
         index,
       ) as string,
+      driver: this.callFactory(this._driver, index) as Driver,
     });
 
     ride.validate();

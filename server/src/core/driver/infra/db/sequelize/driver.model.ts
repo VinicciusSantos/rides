@@ -1,11 +1,13 @@
 import {
   Column,
   DataType,
+  HasMany,
   Model,
   PrimaryKey,
   Table,
 } from 'sequelize-typescript';
 
+import { RideModel } from '../../../../ride/infra/db/sequelize';
 import { ReviewJSON, VehicleJSON } from '../../../domain/value-objects';
 
 export interface DriverModelProps {
@@ -41,4 +43,7 @@ export class DriverModel extends Model<DriverModelProps> {
 
   @Column({ type: DataType.FLOAT })
   public declare minimum_km: number;
+
+  @HasMany(() => RideModel, 'driver_id')
+  public declare rides: RideModel[];
 }

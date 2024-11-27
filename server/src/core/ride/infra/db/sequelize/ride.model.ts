@@ -1,6 +1,8 @@
 import {
+  BelongsTo,
   Column,
   DataType,
+  ForeignKey,
   Model,
   PrimaryKey,
   Table,
@@ -10,6 +12,7 @@ import {
   Geolocation,
   GeolocationJSON,
 } from '../../../../../shared/domain/value-objects';
+import { DriverModel } from '../../../../driver/infra/db/sequelize';
 
 export interface RideModelProps {
   ride_id: string;
@@ -21,6 +24,7 @@ export interface RideModelProps {
   driver_id: number;
   value: number;
   encoded_polyline: string;
+  driver?: DriverModel;
 }
 
 @Table({ tableName: 't_ride', timestamps: false })
@@ -29,7 +33,6 @@ export class RideModel extends Model<RideModelProps> {
   @Column({ type: DataType.UUID })
   public declare ride_id: string;
 
-  // TODO - foreign key
   @Column({ type: DataType.UUID })
   public declare customer_id: string;
 
@@ -45,15 +48,18 @@ export class RideModel extends Model<RideModelProps> {
   @Column({ type: DataType.STRING })
   public declare duration: string;
 
-  // TODO - foreign key
+  @ForeignKey(() => DriverModel)
   @Column({ type: DataType.INTEGER })
-  public declare driver_id: string;
+  public declare driver_id: number;
 
   @Column({ type: DataType.FLOAT })
   public declare value: number;
 
   @Column({ type: DataType.TEXT })
   public declare encoded_polyline: string;
+
+  @BelongsTo(() => DriverModel, 'driver_id')
+  public declare driver: DriverModel;
 }
 
 export interface RideEstimationModelProps {
@@ -72,10 +78,10 @@ export class RideEstimationModel extends Model {
   public declare id: number;
 
   @Column({ type: DataType.JSON })
-  public declare origin: string;
+  public declare origin: GeolocationJSON;
 
   @Column({ type: DataType.JSON })
-  public declare destination: string;
+  public declare destination: GeolocationJSON;
 
   @Column({ type: DataType.FLOAT })
   public declare distance: number;

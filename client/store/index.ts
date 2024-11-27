@@ -1,4 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
+
 import rideReducer from "./slices/ride.slice";
 
 export const store = configureStore({

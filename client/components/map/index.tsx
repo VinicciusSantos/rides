@@ -64,7 +64,7 @@ export default function Map({ mapContainerStyle }: MapProps) {
     <GoogleMap
       mapContainerStyle={mapContainerStyle}
       center={center}
-      zoom={12}
+      zoom={14}
       onLoad={(map) => {
         mapRef.current = map;
       }}

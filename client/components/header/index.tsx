@@ -1,5 +1,8 @@
-import Link from "next/link";
+"use client";
 
+import { getUser } from "@/services/auth.service";
+import Link from "next/link";
+import { Logo } from "../logo";
 import { ThemeToggle } from "../theme-toggle";
 import { Button } from "../ui/button";
 import {
@@ -7,56 +10,84 @@ import {
   NavigationMenuItem,
   NavigationMenuList,
 } from "../ui/navigation-menu";
-import { Logo } from "../logo";
+import UserAvatarPopover from "../user-avatar";
+
+interface NavigationItem {
+  label: string;
+  href: string;
+  external?: boolean;
+  hide?: boolean;
+}
 
 export function Header() {
+  const user = getUser();
+
+  const mainNavigation: NavigationItem[] = [
+    { label: "Home", href: "/" },
+    { label: "Drivers", href: "/docs/components" },
+    { hide: !user, label: "Recent rides", href: `/rides/${user?.sub}` },
+    {
+      label: "API Docs",
+      href: process.env.NEXT_PUBLIC_API_BASE_URL + "/docs",
+      external: true,
+    },
+  ];
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 dark:border-border flex justify-center">
       <div className="flex h-14 w-full max-w-screen-2xl items-center justify-between px-4">
         <div className="mr-4 hidden md:flex">
-          <div className="flex gap-1 items-center mr-2">
+          <div className="flex items-center gap-2 mr-8">
             <Logo />
-            <a className="mr-4 flex items-center gap-2 lg:mr-6" href="/">
-              <span className="hidden font-bold text-primary lg:inline-block">
-                Rides
-              </span>
-            </a>
+            <Link href="/" className="hidden lg:flex items-center gap-2">
+              <span className="font-bold text-primary">Rides</span>
+            </Link>
           </div>
+
           <NavigationMenu>
             <NavigationMenuList className="flex items-center gap-4 text-sm xl:gap-6">
-              <NavigationMenuItem>
-                <a
-                  className="transition-colors hover:text-foreground/80 text-foreground/80"
-                  href={process.env.NEXT_PUBLIC_API_BASE_URL + "/docs"}
-                  target="_blank"
-                >
-                  API Docs
-                </a>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <a
-                  className="transition-colors hover:text-foreground/80 text-foreground/80"
-                  href="/docs/components"
-                >
-                  Drivers
-                </a>
-              </NavigationMenuItem>
+              {mainNavigation
+                .filter((i) => !i.hide)
+                .map((item, index) => (
+                  <NavigationMenuItem key={index}>
+                    {item.external ? (
+                      <a
+                        href={item.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="transition-colors hover:text-foreground/80 text-foreground/80"
+                      >
+                        {item.label}
+                      </a>
+                    ) : (
+                      <Link
+                        href={item.href}
+                        className="transition-colors hover:text-foreground/80 text-foreground/80"
+                      >
+                        {item.label}
+                      </Link>
+                    )}
+                  </NavigationMenuItem>
+                ))}
             </NavigationMenuList>
           </NavigationMenu>
         </div>
 
-        <div className="flex gap-4">
+        <div className="flex items-center gap-2">
           <ThemeToggle />
 
-          <Link href="/sign-in">
-            <Button className="flex gap-4" variant="ghost">
-              Sign in
-            </Button>
-          </Link>
-
-          <Link href="/sign-up">
-            <Button className="flex gap-4">Sign up</Button>
-          </Link>
+          {user ? (
+            <UserAvatarPopover />
+          ) : (
+            <div className="flex gap-2">
+              <Link href="/sign-in">
+                <Button variant="ghost">Sign in</Button>
+              </Link>
+              <Link href="/sign-up">
+                <Button>Sign up</Button>
+              </Link>
+            </div>
+          )}
         </div>
       </div>
     </header>

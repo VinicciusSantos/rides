@@ -19,6 +19,7 @@ import { useState } from "react";
 import { Autocomplete } from "@react-google-maps/api";
 import { estimateRide } from "@/services/ride.service";
 import { setEstimate } from "@/store/slices/ride.slice";
+import { getUser } from "@/services/auth.service";
 
 const locationFormSchema = z.object({
   origin: z.string().min(1, "Origin is required."),
@@ -49,7 +50,7 @@ export function LocationForm() {
     setLoading(true);
     try {
       const estimate = await estimateRide({
-        customer_id: "1", // TODO: Replace com ID real do cliente
+        customer_id: getUser()?.sub ?? "-1",
         origin: data.origin,
         destination: data.destination,
       });

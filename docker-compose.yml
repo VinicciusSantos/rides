@@ -8,7 +8,7 @@ services:
       - "80:3000"
     environment:
       - NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=${GOOGLE_API_KEY}
-      - NEXT_PUBLIC_API_BASE_URL=server
+      - NEXT_PUBLIC_API_BASE_URL=server:8000
 
   server:
     build:
@@ -30,8 +30,14 @@ services:
       - DB_HOST=${DB_HOST:-db}
       - DB_LOGGING=${DB_LOGGING:-false}
       - DB_PORT=${DB_PORT:-5432}
+      - KEYCLOAK_API_URL=${KEYCLOAK_API_URL:-http://keycloak:10000}
+      - KEYCLOAK_REALM=${KEYCLOAK_REALM:-master}
+      - KEYCLOAK_ADMIN_USERNAME=${KEYCLOAK_ADMIN_USERNAME:-admin}
+      - KEYCLOAK_ADMIN_PASSWORD=${KEYCLOAK_ADMIN_PASSWORD:-admin}
     depends_on:
       db:
+        condition: service_healthy
+      keycloak:
         condition: service_healthy
 
   db:
@@ -56,7 +62,7 @@ services:
 
   keycloak:
     container_name: rides-keycloak
-    image: quay.io/phasetwo/phasetwo-keycloak:latest
+    image: quay.io/keycloak/keycloak:latest
     restart: always
     depends_on:
       - authdb
@@ -74,6 +80,12 @@ services:
       KC_DB_URL_DATABASE: ${KC_DB_URL_DATABASE:-auth_rides_db}
       KC_DB_USERNAME: ${KC_DB_USERNAME:-auth_rides_db_user}
       KC_DB_PASSWORD: ${KC_DB_PASSWORD:-password}
+      KC_HEALTH_ENABLED: true
+    healthcheck:
+      test: ["CMD-SHELL", "exec 3<>/dev/tcp/127.0.0.1/9000;echo -e 'GET /health/ready HTTP/1.1\r\nhost: http://localhost\r\nConnection: close\r\n\r\n' >&3;if [ $? -eq 0 ]; then echo 'Healthcheck Successful';exit 0;else echo 'Healthcheck Failed';exit 1;fi;"]
+      interval: 5s
+      timeout: 10s
+      retries: 10
 
   authdb:
     image: postgres:17

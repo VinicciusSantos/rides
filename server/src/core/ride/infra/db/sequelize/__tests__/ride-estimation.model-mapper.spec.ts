@@ -1,11 +1,12 @@
 import { Geolocation } from '../../../../../../shared/domain/value-objects';
 import { setupSequelize } from '../../../../../../shared/infra/testing';
+import { DriverModel } from '../../../../../driver/infra/db/sequelize';
 import { RideEstimation } from '../../../../domain';
-import { RideEstimationModel } from '../ride.model';
+import { RideEstimationModel, RideModel } from '../ride.model';
 import { RideEstimationModelMapper } from '../ride.model-mapper';
 
 describe('RideEstimationModelMapper Unit Tests', () => {
-  setupSequelize({ models: [RideEstimationModel] });
+  setupSequelize({ models: [RideModel, RideEstimationModel, DriverModel] });
 
   it('should convert RideEstimation to RideEstimationModel and vice versa', () => {
     const originalVO = new RideEstimation({
@@ -22,6 +23,9 @@ describe('RideEstimationModelMapper Unit Tests', () => {
     const model = RideEstimationModel.build({ ...modelProps });
 
     const newVO = RideEstimationModelMapper.toValueObject(model);
-    expect(originalVO.toJSON()).toEqual(newVO.toJSON());
+    expect(newVO.toJSON()).toEqual({
+      ...originalVO.toJSON(),
+      id: expect.any(Number),
+    });
   });
 });

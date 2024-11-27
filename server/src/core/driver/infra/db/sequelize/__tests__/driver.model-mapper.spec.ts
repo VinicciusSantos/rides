@@ -1,10 +1,11 @@
 import { setupSequelize } from '../../../../../../shared/infra/testing';
+import { RideModel } from '../../../../../ride/infra/db/sequelize';
 import { DriverFakeBuilder } from '../../../../domain';
 import { DriverModel } from '../driver.model';
 import { DriverModelMapper } from '../driver.model-mapper';
 
 describe('DriverModelMapper Unit Tests', () => {
-  setupSequelize({ models: [DriverModel] });
+  setupSequelize({ models: [DriverModel, RideModel] });
 
   it('should throws error when Driver is invalid', () => {
     const item = DriverFakeBuilder.one().invalid().build();

@@ -5,7 +5,7 @@ import {
   Uuid,
 } from '../../../shared/domain/value-objects';
 import { CustomerId } from '../../customer/domain';
-import { DriverId } from '../../driver/domain';
+import { Driver, DriverId, DriverJSON } from '../../driver/domain';
 
 export class RideId extends Uuid {}
 
@@ -19,6 +19,7 @@ export interface RideConstructorProps {
   duration: string;
   value: number;
   encoded_polyline: string;
+  driver?: Driver;
 }
 
 export interface RideCreateCommand {
@@ -39,7 +40,8 @@ export type RideJSON = EntityJSON<{
   destination: GeolocationJSON;
   distance: number;
   duration: string;
-  driver_id: number;
   value: number;
   encoded_polyline: string;
+  driver_id: number;
+  driver: DriverJSON | null;
 }>;

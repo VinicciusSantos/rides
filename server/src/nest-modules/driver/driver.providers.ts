@@ -5,6 +5,8 @@ import {
   DriverSequelizeRepository,
 } from '../../core/driver/infra/db/sequelize';
 import { UnitOfWorkSequelize } from '../../shared/infra/db/sequelize';
+import { GetDriversUsecase } from '../../core/driver/application/usecases';
+import { IDriverRepository } from '../../core/driver/domain';
 
 export const REPOSITORIES = {
   DRIVER_REPOSITORY: {
@@ -19,6 +21,16 @@ export const REPOSITORIES = {
   },
 };
 
+export const USECASES = {
+  GET_DRIVERS_USECASE: {
+    provide: GetDriversUsecase,
+    useFactory: (driverRepo: IDriverRepository) =>
+      new GetDriversUsecase(driverRepo),
+    inject: [REPOSITORIES.DRIVER_REPOSITORY.provide],
+  },
+};
+
 export const DRIVER_PROVIDERS = {
   REPOSITORIES,
+  USECASES,
 };

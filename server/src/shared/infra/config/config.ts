@@ -31,6 +31,12 @@ export class Config {
         port: Number(process.env.DB_PORT),
       },
       google_api_key: process.env.GOOGLE_API_KEY,
+      keycloak: {
+        api_url: process.env.KEYCLOAK_API_URL,
+        realm: process.env.KEYCLOAK_REALM,
+        admin_username: process.env.KEYCLOAK_ADMIN_USERNAME,
+        admin_password: process.env.KEYCLOAK_ADMIN_PASSWORD,
+      },
     });
 
     ConfigValidator.validate(Config._env);

@@ -1,14 +1,15 @@
 import { Entity } from '../entity';
 import { ValueObject } from '../value-objects';
 
-interface SearchResultConstructorProps<E extends Entity> {
+interface SearchResultConstructorProps<E> {
   items: E[];
   total: number;
   current_page: number;
   per_page: number;
 }
 
-export class SearchResult<E extends Entity = Entity> extends ValueObject {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export class SearchResult<E = any> extends ValueObject {
   public readonly items: E[];
   public readonly total: number;
   public readonly current_page: number;
@@ -26,7 +27,10 @@ export class SearchResult<E extends Entity = Entity> extends ValueObject {
 
   public toJSON(forceEntity = false) {
     return {
-      items: forceEntity ? this.items.map((item) => item.toJSON()) : this.items,
+      items:
+        forceEntity && this.items[0] instanceof Entity
+          ? this.items.map((item) => (item as Entity).toJSON())
+          : this.items,
       total: this.total,
       current_page: this.current_page,
       per_page: this.per_page,

@@ -5,11 +5,12 @@ import {
   DriverModelMapper,
 } from './core/driver/infra/db/sequelize';
 import { SequelizeDb } from './shared/infra/db/sequelize';
+import { SEQUELIZE_MODELS } from './shared/infra/db/sequelize/constants';
 
 async function seed() {
   try {
     const sequelize = SequelizeDb.sequelize;
-    sequelize.addModels([DriverModel]);
+    sequelize.addModels(SEQUELIZE_MODELS);
 
     console.log('Conecting to database...');
     await sequelize.authenticate();

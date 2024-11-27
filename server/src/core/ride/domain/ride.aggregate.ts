@@ -1,7 +1,7 @@
 import { Entity } from '../../../shared/domain';
 import { Geolocation } from '../../../shared/domain/value-objects';
 import { CustomerId } from '../../customer/domain';
-import { DriverId } from '../../driver/domain';
+import { Driver, DriverId } from '../../driver/domain';
 import { RideFakeBuilder } from './ride.fake-builder';
 import {
   RideConstructorProps,
@@ -24,6 +24,7 @@ export class Ride
   private _driver_id: DriverId;
   private _value: number;
   private _encoded_polyline: string;
+  private _driver: Driver | undefined;
 
   public get entity_id(): RideId {
     return this._ride_id;
@@ -65,6 +66,10 @@ export class Ride
     return this._encoded_polyline;
   }
 
+  public get driver(): Driver | undefined {
+    return this._driver;
+  }
+
   public static get fake() {
     return RideFakeBuilder;
   }
@@ -90,6 +95,7 @@ export class Ride
     this._driver_id = props.driver_id;
     this._value = props.value;
     this._encoded_polyline = props.encoded_polyline;
+    this._driver = props.driver;
   }
 
   public validate(): boolean {
@@ -104,9 +110,10 @@ export class Ride
       destination: this.destination.toJSON(),
       distance: this.distance,
       duration: this.duration,
-      driver_id: this.driver_id.id,
       value: this.value,
       encoded_polyline: this.encoded_polyline,
+      driver_id: this.driver_id.id,
+      driver: this.driver ? this.driver.toJSON() : null,
     };
   }
 }

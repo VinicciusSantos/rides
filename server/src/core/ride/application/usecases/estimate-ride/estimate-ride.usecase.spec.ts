@@ -13,6 +13,7 @@ import { EstimateRideUsecase } from './estimate-ride.usecase';
 
 const rideRepoMock = {
   registerEstimation: jest.fn(),
+  findEstimation: jest.fn(),
 };
 
 const driverRepoMock = {
@@ -91,7 +92,7 @@ describe('EstimateRideUsecase', () => {
       minimum_km: 5,
       review: new Review({
         rating: 4,
-        comment: 'TODO: Implement review system',
+        comment: 'nice driver',
       }),
       fee_by_km: 5,
     });

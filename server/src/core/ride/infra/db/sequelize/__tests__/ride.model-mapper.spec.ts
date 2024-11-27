@@ -1,10 +1,11 @@
 import { setupSequelize } from '../../../../../../shared/infra/testing';
+import { DriverModel } from '../../../../../driver/infra/db/sequelize';
 import { RideFakeBuilder } from '../../../../domain';
 import { RideModel } from '../ride.model';
 import { RideModelMapper } from '../ride.model-mapper';
 
 describe('RideModelMapper Unit Tests', () => {
-  setupSequelize({ models: [RideModel] });
+  setupSequelize({ models: [RideModel, DriverModel] });
 
   it('should throws error when Ride is invalid', () => {
     const ride = RideFakeBuilder.one().invalid().build();
@@ -19,6 +20,10 @@ describe('RideModelMapper Unit Tests', () => {
     const model = RideModel.build(modelProps);
 
     const entity = RideModelMapper.toEntity(model);
-    expect(originalEntity.toJSON()).toEqual(entity.toJSON());
+
+    expect(entity.toJSON()).toEqual({
+      ...originalEntity.toJSON(),
+      driver: null,
+    });
   });
 });

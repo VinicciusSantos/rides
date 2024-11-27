@@ -1,20 +1,26 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Form,
+  FormControl,
   FormField,
   FormItem,
   FormLabel,
-  FormControl,
   FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import {
+  setAccessToken,
+  setRefreshToken,
+  signIn,
+} from "@/services/auth.service";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 
 const signInSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -24,6 +30,8 @@ const signInSchema = z.object({
 type LoginFormInputs = z.infer<typeof signInSchema>;
 
 export function SignInForm() {
+  const router = useRouter();
+
   const form = useForm<LoginFormInputs>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
@@ -33,8 +41,14 @@ export function SignInForm() {
   });
 
   const onSubmit = async (data: LoginFormInputs) => {
-    console.log(data);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    const response = await signIn({
+      email_or_username: data.email,
+      password: data.password,
+    });
+    setAccessToken(response.access_token);
+    setRefreshToken(response.refresh_token);
+
+    router.push("/");
   };
 
   return (
