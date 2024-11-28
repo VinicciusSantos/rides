@@ -14,7 +14,7 @@ services:
       - "80:3000"
     environment:
       NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: ${GOOGLE_API_KEY}
-      NEXT_PUBLIC_API_BASE_URL: http://http://161.35.54.37:8000
+      NEXT_PUBLIC_API_BASE_URL: http://161.35.54.37:8000
     networks:
       - rides-network
     extra_hosts:
