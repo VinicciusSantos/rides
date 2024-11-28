@@ -1,3 +1,9 @@
+version: "3.8"
+
+networks:
+  rides-network:
+    driver: bridge
+
 services:
   client:
     build:
@@ -8,9 +14,9 @@ services:
       - "80:3000"
     environment:
       NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: ${GOOGLE_API_KEY}
-      NEXT_PUBLIC_API_BASE_URL: http://host.docker.internal:8000
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+      NEXT_PUBLIC_API_BASE_URL: http://server:8000
+    networks:
+      - rides-network
 
   server:
     build:
@@ -41,6 +47,8 @@ services:
         condition: service_healthy
       keycloak:
         condition: service_healthy
+    networks:
+      - rides-network
 
   db:
     image: postgres:17
@@ -61,6 +69,8 @@ services:
       retries: 10
     ports:
       - "5432:5432"
+    networks:
+      - rides-network
 
   keycloak:
     container_name: rides-keycloak
@@ -88,6 +98,8 @@ services:
       interval: 7s
       timeout: 12s
       retries: 20
+    networks:
+      - rides-network
 
   authdb:
     image: postgres:17
@@ -99,3 +111,5 @@ services:
       POSTGRES_DB: ${AUTH_DB_DATABASE:-auth_rides_db}
     ports:
       - "5433:5432"
+    networks:
+      - rides-network
