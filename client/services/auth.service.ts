@@ -101,7 +101,6 @@ export const getRefreshToken = () => {
 export const setRefreshToken = (token: string) => {
   Cookies.set("refresh_token", token, {
     httpOnly: false,
-    secure: process.env.NODE_ENV === "production",
     sameSite: "strict",
     expires: 30 / 24,
   });

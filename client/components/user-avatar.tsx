@@ -7,6 +7,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { toast } from "@/hooks/use-toast";
 import {
   getUser,
   logout,
@@ -41,10 +42,19 @@ export default function UserAvatarPopover() {
   }, []);
 
   const handleLogout = async () => {
-    await logout();
-    removeAccessToken();
-    removeRefreshToken();
-    window.location.reload();
+    try {
+      await logout();
+      removeAccessToken();
+      removeRefreshToken();
+      window.location.reload();
+    } catch (error) {
+      toast({
+        title: "Error",
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        description: (error as any).error_description || "Something went wrong",
+        variant: 'destructive'
+      })
+    }
   };
 
   return (
