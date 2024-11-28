@@ -23,6 +23,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Driver } from "@/services/driver.service";
 import { getUser } from "@/services/auth.service";
+import { clearObject } from "@/lib/clear-object";
 
 const filterFormSchema = z.object({
   userId: z.string().optional(),
@@ -47,7 +48,8 @@ export default function FilterForm({ drivers }: FilterFormProps) {
     },
   });
 
-  const handleSubmit = (data: FilterFormValues) => {
+  const handleSubmit = (formData: FilterFormValues) => {
+    const data = clearObject(formData);
     const searchParams = new URLSearchParams();
     if (data.userId) searchParams.append("userId", data.userId);
     if (data.driverId && data.driverId !== "0")

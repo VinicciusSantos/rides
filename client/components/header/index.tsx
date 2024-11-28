@@ -11,6 +11,7 @@ import {
   NavigationMenuList,
 } from "../ui/navigation-menu";
 import UserAvatarPopover from "../user-avatar";
+import { env } from "next-runtime-env";
 
 interface NavigationItem {
   label: string;
@@ -27,7 +28,7 @@ export function Header() {
     { label: "Recent rides", href: `/rides#userId=${user?.sub}` },
     {
       label: "API Docs",
-      href: process.env.NEXT_PUBLIC_API_BASE_URL + "/docs",
+      href: env("NEXT_PUBLIC_API_BASE_URL") + "/docs",
       external: true,
     },
   ];

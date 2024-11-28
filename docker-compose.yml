@@ -1,3 +1,9 @@
+version: "3.8"
+
+networks:
+  rides-network:
+    driver: bridge
+
 services:
   client:
     build:
@@ -7,8 +13,10 @@ services:
     ports:
       - "80:3000"
     environment:
-      - NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=${GOOGLE_API_KEY}
-      - NEXT_PUBLIC_API_BASE_URL=server:8000
+      NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: ${GOOGLE_API_KEY}
+      NEXT_PUBLIC_API_BASE_URL: http://161.35.54.37:8000
+    networks:
+      - rides-network
 
   server:
     build:
@@ -23,22 +31,24 @@ services:
     env_file:
       - .env
     environment:
-      - DB_DATABASE=${DB_DATABASE:-rides_db}
-      - DB_USERNAME=${DB_USERNAME:-rides_db_user}
-      - DB_PASSWORD=${DB_PASSWORD:-password}
-      - DB_DIALECT=${DB_DIALECT:-postgres}
-      - DB_HOST=${DB_HOST:-db}
-      - DB_LOGGING=${DB_LOGGING:-false}
-      - DB_PORT=${DB_PORT:-5432}
-      - KEYCLOAK_API_URL=${KEYCLOAK_API_URL:-http://keycloak:10000}
-      - KEYCLOAK_REALM=${KEYCLOAK_REALM:-master}
-      - KEYCLOAK_ADMIN_USERNAME=${KEYCLOAK_ADMIN_USERNAME:-admin}
-      - KEYCLOAK_ADMIN_PASSWORD=${KEYCLOAK_ADMIN_PASSWORD:-admin}
+      DB_DATABASE: ${DB_DATABASE:-rides_db}
+      DB_USERNAME: ${DB_USERNAME:-rides_db_user}
+      DB_PASSWORD: ${DB_PASSWORD:-password}
+      DB_DIALECT: ${DB_DIALECT:-postgres}
+      DB_HOST: ${DB_HOST:-db}
+      DB_LOGGING: ${DB_LOGGING:-false}
+      DB_PORT: ${DB_PORT:-5432}
+      KEYCLOAK_API_URL: ${KEYCLOAK_API_URL:-http://keycloak:10000}
+      KEYCLOAK_REALM: ${KEYCLOAK_REALM:-master}
+      KEYCLOAK_ADMIN_USERNAME: ${KEYCLOAK_ADMIN_USERNAME:-admin}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin}
     depends_on:
       db:
         condition: service_healthy
       keycloak:
         condition: service_healthy
+    networks:
+      - rides-network
 
   db:
     image: postgres:17
@@ -59,6 +69,8 @@ services:
       retries: 10
     ports:
       - "5432:5432"
+    networks:
+      - rides-network
 
   keycloak:
     container_name: rides-keycloak
@@ -83,9 +95,11 @@ services:
       KC_HEALTH_ENABLED: true
     healthcheck:
       test: ["CMD-SHELL", "exec 3<>/dev/tcp/127.0.0.1/9000;echo -e 'GET /health/ready HTTP/1.1\r\nhost: http://localhost\r\nConnection: close\r\n\r\n' >&3;if [ $? -eq 0 ]; then echo 'Healthcheck Successful';exit 0;else echo 'Healthcheck Failed';exit 1;fi;"]
-      interval: 5s
-      timeout: 10s
-      retries: 10
+      interval: 7s
+      timeout: 12s
+      retries: 20
+    networks:
+      - rides-network
 
   authdb:
     image: postgres:17
@@ -97,3 +111,5 @@ services:
       POSTGRES_DB: ${AUTH_DB_DATABASE:-auth_rides_db}
     ports:
       - "5433:5432"
+    networks:
+      - rides-network

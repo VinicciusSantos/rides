@@ -8,6 +8,7 @@ import { store } from "@/store";
 import { Libraries, LoadScript } from "@react-google-maps/api";
 import localFont from "next/font/local";
 import { Provider as ReduxProvider } from "react-redux";
+import { env, PublicEnvScript } from "next-runtime-env";
 
 const googleImportedLibraries: Libraries = ["places"];
 
@@ -29,6 +30,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <PublicEnvScript />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
@@ -40,7 +44,7 @@ export default function RootLayout({
         >
           <ReduxProvider store={store}>
             <LoadScript
-              googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY!}
+              googleMapsApiKey={env("NEXT_PUBLIC_GOOGLE_MAPS_API_KEY")!}
               libraries={googleImportedLibraries}
             >
               {children}
