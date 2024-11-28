@@ -78,7 +78,7 @@ export const SelectDriver = ({
           title: "Corrida Confirmada",
           description: `Sua corrida com ${driver.name} foi confirmada.`,
         });
-        router.push(`/rides/${user.sub}`);
+        router.push(`/rides&userId=${user.sub}`);
       } else {
         setDialogState("error");
       }
